@@ -110,3 +110,100 @@ def station_enter():
         
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+@station_bp.route('/leave', methods=['POST'])
+def station_leave():
+    """
+    Station leave route - called when Viam no longer detects a maker at a station camera.
+    
+    Expects JSON body:
+    {
+        "external_label": "6767",  # The Viam face recognition label
+        "station_id": "uuid"       # The station UUID
+    }
+    
+    On success:
+    - Updates maker_status to 'idle' and clears station_id
+    - Updates station_status to 'idle' and clears active_maker_id
+    - Broadcasts 'station_left' event via WebSocket
+    """
+    data = request.get_json()
+    
+    if not data:
+        return jsonify({"error": "Missing request body"}), 400
+    
+    external_label = data.get('external_label')
+    station_id = data.get('station_id')
+    
+    if not external_label:
+        return jsonify({"error": "Missing external_label"}), 400
+    
+    if not station_id:
+        return jsonify({"error": "Missing station_id"}), 400
+    
+    if not supabase:
+        return jsonify({"error": "Database connection not available"}), 500
+    
+    try:
+        # Look up the maker by their Viam external_label
+        maker_response = supabase.table('makers').select('*').eq('external_label', external_label).execute()
+        
+        if not maker_response.data or len(maker_response.data) == 0:
+            return jsonify({"error": f"Maker with label '{external_label}' not found"}), 404
+        
+        maker = maker_response.data[0]
+        maker_id = maker['id']
+        
+        # Look up the station
+        station_response = supabase.table('stations').select('*').eq('id', station_id).execute()
+        
+        if not station_response.data or len(station_response.data) == 0:
+            return jsonify({"error": f"Station with id '{station_id}' not found"}), 404
+        
+        station = station_response.data[0]
+        
+        # Update maker_status to 'idle' and clear station_id
+        supabase.table('maker_status').upsert({
+            'maker_id': maker_id,
+            'status': 'idle',
+            'station_id': None,
+            'updated_at': 'now()'
+        }, on_conflict='maker_id').execute()
+        
+        # Update station_status to 'idle' and clear active_maker_id
+        supabase.table('station_status').upsert({
+            'station_id': station_id,
+            'status': 'idle',
+            'active_maker_id': None,
+            'updated_at': 'now()'
+        }, on_conflict='station_id').execute()
+        
+        # Prepare data for response and WebSocket broadcast
+        event_data = {
+            "maker": {
+                "id": maker_id,
+                "display_name": maker['display_name'],
+                "external_label": maker['external_label'],
+                "status": "idle"
+            },
+            "station": {
+                "id": station_id,
+                "name": station['name'],
+                "status": "idle"
+            }
+        }
+        
+        # Broadcast to all connected WebSocket clients
+        if _socketio:
+            _socketio.emit('station_left', event_data)
+            print(f"WebSocket: Emitted 'station_left' - {maker['display_name']} left {station['name']}")
+        
+        return jsonify({
+            "success": True,
+            "message": f"Maker '{maker['display_name']}' left station '{station['name']}'",
+            **event_data
+        }), 200
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

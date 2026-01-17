@@ -104,6 +104,13 @@
             First run login, then enter the station.
         </p>
     </div>
+
+    <div class="test-section">
+        <h3>3. Test Station Leave (simulates maker leaving a station)</h3>
+        <input type="text" id="leaveLabelInput" placeholder="External label (e.g., 6767)" value="6767">
+        <input type="text" id="leaveStationIdInput" placeholder="Station UUID" value="">
+        <button onclick="testStationLeave()">Send Station Leave</button>
+    </div>
     
     <div class="event-log">
         <h3>Event Log</h3>
@@ -149,6 +156,11 @@
             logEvent('station_entered', data);
         });
 
+        // Listen for station left events
+        socket.on('station_left', (data) => {
+            logEvent('station_left', data);
+        });
+
         // Test function to simulate Pi sending login request
         async function testLogin() {
             const label = document.getElementById('labelInput').value;
@@ -192,6 +204,33 @@
                 });
                 const data = await response.json();
                 logEvent('HTTP Response (POST /station/enter)', data);
+            } catch (error) {
+                logEvent('HTTP Error', { error: error.message });
+            }
+        }
+
+        // Test function to simulate maker leaving a station
+        async function testStationLeave() {
+            const label = document.getElementById('leaveLabelInput').value;
+            const stationId = document.getElementById('leaveStationIdInput').value;
+            
+            if (!label) {
+                alert('Please enter an external label');
+                return;
+            }
+            if (!stationId) {
+                alert('Please enter a station UUID');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:8080/station/leave', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ external_label: label, station_id: stationId })
+                });
+                const data = await response.json();
+                logEvent('HTTP Response (POST /station/leave)', data);
             } catch (error) {
                 logEvent('HTTP Error', { error: error.message });
             }
