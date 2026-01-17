@@ -81,12 +81,67 @@
             margin-right: 10px;
             width: 200px;
         }
+        .state-section {
+            background: #16213e;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .state-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .state-card {
+            background: #1f4068;
+            padding: 15px;
+            border-radius: 6px;
+        }
+        .state-card h4 {
+            margin: 0 0 10px 0;
+            color: #00d9ff;
+        }
+        .state-item {
+            background: #0f3460;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin: 5px 0;
+            font-size: 13px;
+        }
+        .state-item.idle { border-left: 3px solid #6c757d; }
+        .state-item.active, .state-item.in_use { border-left: 3px solid #28a745; }
+        .state-item.violation { border-left: 3px solid #dc3545; }
+        .empty-state { color: #666; font-style: italic; }
+        .refresh-btn {
+            background: #6c757d;
+            font-size: 12px;
+            padding: 8px 16px;
+        }
     </style>
 </head>
 <body>
     <h1>MakerSafe WebSocket Test</h1>
     
     <div id="status" class="status disconnected">Disconnected</div>
+    
+    <div class="state-section">
+        <h3>Current State <button class="refresh-btn" onclick="fetchState()">Refresh</button></h3>
+        <div class="state-grid">
+            <div class="state-card">
+                <h4>Makers Present</h4>
+                <div id="makersState"></div>
+            </div>
+            <div class="state-card">
+                <h4>Stations</h4>
+                <div id="stationsState"></div>
+            </div>
+            <div class="state-card">
+                <h4>Active Violations</h4>
+                <div id="violationsState"></div>
+            </div>
+        </div>
+    </div>
     
     <div class="test-section">
         <h3>1. Test Login (simulates Pi login camera detecting a maker)</h3>
@@ -138,6 +193,66 @@
         const statusEl = document.getElementById('status');
         const eventsEl = document.getElementById('events');
 
+        // Fetch and display current state
+        async function fetchState() {
+            console.log('Fetching state...');
+            try {
+                const response = await fetch('http://localhost:8080/state');
+                const data = await response.json();
+                console.log('State received:', data);
+                renderState(data);
+            } catch (error) {
+                console.error('Failed to fetch state:', error);
+                document.getElementById('makersState').innerHTML = '<div class="empty-state">Error loading state</div>';
+                document.getElementById('stationsState').innerHTML = '<div class="empty-state">Error loading state</div>';
+                document.getElementById('violationsState').innerHTML = '<div class="empty-state">Error loading state</div>';
+            }
+        }
+
+        function renderState(data) {
+            // Render makers
+            const makersEl = document.getElementById('makersState');
+            if (data.makers && data.makers.length > 0) {
+                makersEl.innerHTML = data.makers.map(m => `
+                    <div class="state-item ${m.status}">
+                        <strong>${m.display_name}</strong><br>
+                        <small>Status: ${m.status}</small>
+                    </div>
+                `).join('');
+            } else {
+                makersEl.innerHTML = '<div class="empty-state">No makers present</div>';
+            }
+
+            // Render stations
+            const stationsEl = document.getElementById('stationsState');
+            if (data.stations && data.stations.length > 0) {
+                stationsEl.innerHTML = data.stations.map(s => `
+                    <div class="state-item ${s.status}">
+                        <strong>${s.name}</strong><br>
+                        <small>Status: ${s.status}</small>
+                    </div>
+                `).join('');
+            } else {
+                stationsEl.innerHTML = '<div class="empty-state">No stations</div>';
+            }
+
+            // Render violations
+            const violationsEl = document.getElementById('violationsState');
+            if (data.violations && data.violations.length > 0) {
+                violationsEl.innerHTML = data.violations.map(v => `
+                    <div class="state-item violation">
+                        <strong>${v.violation_type}</strong><br>
+                        <small>${v.maker_name} @ ${v.station_name}</small>
+                    </div>
+                `).join('');
+            } else {
+                violationsEl.innerHTML = '<div class="empty-state">No active violations</div>';
+            }
+        }
+
+        // Fetch state on page load
+        fetchState();
+
         function logEvent(name, data) {
             const time = new Date().toLocaleTimeString();
             const eventHtml = `
@@ -165,26 +280,31 @@
         // Listen for maker check-in events
         socket.on('maker_checked_in', (data) => {
             logEvent('maker_checked_in', data);
+            fetchState(); // Refresh state
         });
 
         // Listen for station entered events
         socket.on('station_entered', (data) => {
             logEvent('station_entered', data);
+            fetchState(); // Refresh state
         });
 
         // Listen for station left events
         socket.on('station_left', (data) => {
             logEvent('station_left', data);
+            fetchState(); // Refresh state
         });
 
         // Listen for violation events
         socket.on('violation_detected', (data) => {
             logEvent('violation_detected', data);
+            fetchState(); // Refresh state
         });
 
         // Listen for violation resolved events
         socket.on('violation_resolved', (data) => {
             logEvent('violation_resolved', data);
+            fetchState(); // Refresh state
         });
 
         // Test function to simulate Pi sending login request

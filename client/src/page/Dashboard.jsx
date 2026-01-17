@@ -35,7 +35,68 @@ export default function Dashboard() {
         return highSeverity.includes(violationType) ? 'bg-red-600' : 'bg-neutral-600'
     }
 
+    // Fetch initial state from server
+    const fetchInitialState = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/state')
+            const data = await response.json()
+            console.log('Initial state loaded:', data)
+            
+            // Set makers
+            if (data.makers && data.makers.length > 0) {
+                setMakers(data.makers.map(m => ({
+                    id: m.id,
+                    name: m.display_name,
+                    initials: getInitials(m.display_name),
+                    status: m.status,
+                    external_label: m.external_label,
+                    stationId: m.station_id,
+                    stationName: null, // Will be filled from stations
+                })))
+            }
+            
+            // Set stations
+            if (data.stations && data.stations.length > 0) {
+                setStations(data.stations.map(s => ({
+                    id: s.id,
+                    name: s.name,
+                    status: s.status,
+                    assignedMakerId: s.active_maker_id,
+                    assignedMakerName: null, // Will be filled from makers
+                })))
+            }
+            
+            // Set violations
+            if (data.violations && data.violations.length > 0) {
+                setViolations(data.violations.map(v => ({
+                    id: v.id,
+                    name: v.maker_name || 'Unknown',
+                    violation: formatViolationType(v.violation_type),
+                    violationType: v.violation_type,
+                    severity: v.violation_type.includes('GOGGLES') || v.violation_type.includes('PPE') ? 'high' : 'medium',
+                    severityColor: getSeverityColor(v.violation_type),
+                    location: v.station_name || 'Unknown',
+                    time: new Date(v.created_at).toLocaleTimeString('en-US', { 
+                        hour: 'numeric', 
+                        minute: '2-digit',
+                        hour12: true 
+                    }),
+                    description: `${v.violation_type.replace(/_/g, ' ').toLowerCase()} violation detected`,
+                    image: v.image_url,
+                    createdAt: v.created_at,
+                    makerId: v.maker_id,
+                    stationId: v.station_id,
+                })))
+            }
+        } catch (error) {
+            console.error('Failed to fetch initial state:', error)
+        }
+    }
+
     useEffect(() => {
+        // Fetch initial state on mount
+        fetchInitialState()
+        
         const newSocket = io('http://localhost:8080', {
             transports: ['websocket', 'polling'],
         })
