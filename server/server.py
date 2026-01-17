@@ -1,9 +1,10 @@
-from server.config import create_app
+from config import create_app
+from login.routes import login_bp
 import os
 
 app = create_app()
 
-app.register_blueprint(example_bp)
+app.register_blueprint(login_bp)
 
 @app.route('/')
 def index():

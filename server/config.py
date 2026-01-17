@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 from flask import Flask
 from flask_cors import CORS
 from supabase import create_client, Client
@@ -6,9 +7,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-supabase_url: str | None = os.getenv('SUPABASE_URL')
-supabase_key: str | None = os.getenv('SUPABASE_KEY')
-jwt_secret: str | None = os.getenv('JWT_SECRET')
+supabase_url: Optional[str] = os.getenv('SUPABASE_URL')
+supabase_key: Optional[str] = os.getenv('SUPABASE_KEY')
 
 try:
     if not supabase_url or not supabase_key:
@@ -21,10 +21,6 @@ except ValueError as e:
 except Exception as e:
     print(f"An unexpected error occurred during Supabase initialization: {e}")
     supabase = None
-
-if not jwt_secret:
-    print("Warning: JWT_SECRET is not set in .env file. Authentication will fail.")
-    raise ValueError("JWT Secret not found. Check .env file.")
 def create_app():
     """Flask application factory."""
     app = Flask(__name__)
