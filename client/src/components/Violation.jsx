@@ -8,54 +8,8 @@ import {
 import { Card } from "@/components/ui/card"
 import { ChevronDown } from "lucide-react"
 
-export default function Violations() {
-  const violations = [
-    {
-      id: "1",
-      name: "Alex Martinez",
-      violation: "Safety Glasses",
-      severity: "high",
-      severityColor: "bg-red-600",
-      location: "Station 2",
-      time: "10:34 AM",
-      description: "Operating machinery without required safety glasses",
-      image: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=500&h=400&fit=crop"
-    },
-    {
-      id: "2",
-      name: "Jamie Lee",
-      violation: "Workspace Clean",
-      severity: "medium",
-      severityColor: "bg-neutral-600",
-      location: "Station 5",
-      time: "9:15 AM",
-      description: "Workspace not maintained according to cleanliness standards",
-      image: null
-    },
-    {
-      id: "3",
-      name: "Chris Taylor",
-      violation: "Equipment Use",
-      severity: "high",
-      severityColor: "bg-red-600",
-      location: "Station 1",
-      time: "11:22 AM",
-      description: "Improper equipment handling and usage procedures",
-      image: null
-    },
-    {
-      id: "4",
-      name: "Sam Patel",
-      violation: "PPE Missing",
-      severity: "high",
-      severityColor: "bg-red-600",
-      location: "Station 3",
-      time: "2:45 PM",
-      description: "Required personal protective equipment not worn",
-      image: null
-    }
-  ];
-
+export default function Violations({ violations = [] }) {
+  
   return (
     <div className="p-8 bg-white h-full">
       <h1 className="text-2xl font-bold text-neutral-900 mb-8">Violations</h1>

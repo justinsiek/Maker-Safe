@@ -97,7 +97,7 @@
     <div class="test-section">
         <h3>2. Test Station Enter (simulates Pi station camera detecting a maker)</h3>
         <input type="text" id="stationLabelInput" placeholder="External label (e.g., 6767)" value="6767">
-        <input type="text" id="stationIdInput" placeholder="Station UUID" value="">
+        <input type="text" id="stationIdInput" placeholder="Station UUID" value="723740fc-d4d8-4990-998c-5660d3e19898">
         <button onclick="testStationEnter()">Send Station Enter</button>
         <p style="color: #888; font-size: 12px; margin-top: 10px;">
             Note: You need a valid station UUID from your database. 
@@ -108,13 +108,13 @@
     <div class="test-section">
         <h3>3. Test Station Leave (simulates maker leaving a station)</h3>
         <input type="text" id="leaveLabelInput" placeholder="External label (e.g., 6767)" value="6767">
-        <input type="text" id="leaveStationIdInput" placeholder="Station UUID" value="">
+        <input type="text" id="leaveStationIdInput" placeholder="Station UUID" value="723740fc-d4d8-4990-998c-5660d3e19898">
         <button onclick="testStationLeave()">Send Station Leave</button>
     </div>
 
     <div class="test-section" style="border-left: 4px solid #dc3545;">
         <h3 style="color: #dc3545;">4. Test Violation (simulates safety violation detected)</h3>
-        <input type="text" id="violationStationIdInput" placeholder="Station UUID" value="">
+        <input type="text" id="violationStationIdInput" placeholder="Station UUID" value="723740fc-d4d8-4990-998c-5660d3e19898">
         <input type="text" id="violationTypeInput" placeholder="Violation type" value="GOGGLES_NOT_WORN">
         <button onclick="testViolation()" style="background: #dc3545;">Create Violation</button>
         <p style="color: #888; font-size: 12px; margin-top: 10px;">

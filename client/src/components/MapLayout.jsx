@@ -1,47 +1,99 @@
-import { useState } from "react"
+import { useState, useMemo } from "react"
 
-export default function MapLayout({ className = "", makers = [] }) {
+export default function MapLayout({ className = "", makers = [], stations = [] }) {
   const [hoveredSection, setHoveredSection] = useState(null)
   const [selectedSection, setSelectedSection] = useState(null)
 
-  // Define the 3 sections with their assignments
-  const sections = [
-    {
-      id: "workshop-a",
-      name: "Workshop A",
-      path: "M 50 50 L 350 50 L 350 300 L 50 300 Z",
-      centerX: 200,
-      centerY: 175,
-      assignedMaker: makers.find(m => m.name === "Sarah Johnson"),
-    },
-    {
-      id: "workshop-b",
-      name: "Workshop B",
-      path: "M 350 50 L 750 50 L 750 300 L 350 300 Z",
-      centerX: 550,
-      centerY: 175,
-      assignedMaker: makers.find(m => m.name === "Mike Chen"),
-    },
-    {
-      id: "assembly",
-      name: "Assembly Area",
-      path: "M 50 300 L 750 300 L 750 550 L 50 550 Z",
-      centerX: 400,
-      centerY: 425,
-      assignedMaker: null, // Available
-    },
-  ]
+  // Memoize sections to update when makers/stations change
+  const sections = useMemo(() => {
+    // Helper to find maker assigned to a station
+    const getMakerForStation = (stationName) => {
+      // First check stations array for assigned maker
+      const station = stations.find(s => 
+        s.name.toLowerCase() === stationName.toLowerCase()
+      )
+      if (station?.assignedMakerId) {
+        return makers.find(m => m.id === station.assignedMakerId)
+      }
+      // Fallback: check if any maker has this station assigned
+      return makers.find(m => 
+        m.stationName?.toLowerCase() === stationName.toLowerCase()
+      )
+    }
+
+    // Helper to get station status
+    const getStationStatus = (stationName) => {
+      const station = stations.find(s => 
+        s.name.toLowerCase() === stationName.toLowerCase()
+      )
+      return station?.status || 'available'
+    }
+
+    return [
+      {
+        id: "workshop-a",
+        name: "Workshop A",
+        path: "M 50 50 L 350 50 L 350 300 L 50 300 Z",
+        centerX: 200,
+        centerY: 175,
+        assignedMaker: getMakerForStation("Workshop A"),
+        status: getStationStatus("Workshop A"),
+      },
+      {
+        id: "workshop-b",
+        name: "Workshop B",
+        path: "M 350 50 L 750 50 L 750 300 L 350 300 Z",
+        centerX: 550,
+        centerY: 175,
+        assignedMaker: getMakerForStation("Workshop B"),
+        status: getStationStatus("Workshop B"),
+      },
+      {
+        id: "goon-station",
+        name: "goon station",
+        path: "M 50 300 L 750 300 L 750 550 L 50 550 Z",
+        centerX: 400,
+        centerY: 425,
+        assignedMaker: getMakerForStation("goon station"),
+        status: getStationStatus("goon station"),
+      },
+    ]
+  }, [makers, stations])
 
   const getSectionColor = (section) => {
     if (selectedSection === section.id) return "#3b82f6"
     if (hoveredSection === section.id) return "#60a5fa"
-    return section.assignedMaker ? "#e5e7eb" : "#d1fae5"
+    
+    // Color based on status
+    if (section.status === 'in_use' || section.assignedMaker) {
+      return "#fecaca" // Light red for occupied
+    }
+    return "#d1fae5" // Light green for available
   }
 
   const getSectionOpacity = (section) => {
-    if (hoveredSection === section.id || selectedSection === section.id) return 0.6
-    return 0.3
+    if (hoveredSection === section.id || selectedSection === section.id) return 0.7
+    return 0.4
   }
+
+  const getStatusText = (section) => {
+    if (section.status === 'in_use' || section.assignedMaker) {
+      return "OCCUPIED"
+    }
+    return "AVAILABLE"
+  }
+
+  const getStatusColor = (section) => {
+    if (section.status === 'in_use' || section.assignedMaker) {
+      return "#ef4444" // Red
+    }
+    return "#22c55e" // Green
+  }
+
+  // Debug log
+  console.log('MapLayout - makers:', makers)
+  console.log('MapLayout - stations:', stations)
+  console.log('MapLayout - sections:', sections)
 
   return (
     <div className="relative w-full h-full">
@@ -95,11 +147,11 @@ export default function MapLayout({ className = "", makers = [] }) {
               y={section.centerY + 10}
               textAnchor="middle"
               fontSize="16"
-              fill={section.assignedMaker ? "#ef4444" : "#22c55e"}
+              fill={getStatusColor(section)}
               fontWeight="600"
               pointerEvents="none"
             >
-              {section.assignedMaker ? "OCCUPIED" : "AVAILABLE"}
+              {getStatusText(section)}
             </text>
             
             {/* Maker Info */}
@@ -136,28 +188,38 @@ export default function MapLayout({ className = "", makers = [] }) {
       
       {/* Hover Tooltip */}
       {hoveredSection && (
-        <div className="absolute top-4 right-4 bg-white border-2 border-neutral-300 rounded-lg p-4 shadow-lg">
+        <div className="absolute top-4 right-4 bg-white border-2 border-neutral-300 rounded-lg p-4 shadow-lg z-10">
           <h3 className="font-bold text-lg mb-2">
             {sections.find(s => s.id === hoveredSection)?.name}
           </h3>
-          {sections.find(s => s.id === hoveredSection)?.assignedMaker ? (
-            <div>
-              <p className="text-red-600 font-semibold mb-1">🔴 Occupied</p>
-              <p className="text-neutral-700">
-                Assigned to: <span className="font-semibold">
-                  {sections.find(s => s.id === hoveredSection)?.assignedMaker.name}
-                </span>
-              </p>
-              <p className="text-sm text-neutral-500 mt-1">
-                Status: {sections.find(s => s.id === hoveredSection)?.assignedMaker.status}
-              </p>
-            </div>
-          ) : (
-            <div>
-              <p className="text-green-600 font-semibold">✅ Available</p>
-              <p className="text-neutral-600 text-sm">Click to assign a maker</p>
-            </div>
-          )}
+          {(() => {
+            const section = sections.find(s => s.id === hoveredSection)
+            if (section?.assignedMaker || section?.status === 'in_use') {
+              return (
+                <div>
+                  <p className="text-red-600 font-semibold mb-1">🔴 Occupied</p>
+                  {section.assignedMaker && (
+                    <>
+                      <p className="text-neutral-700">
+                        Assigned to: <span className="font-semibold">
+                          {section.assignedMaker.name}
+                        </span>
+                      </p>
+                      <p className="text-sm text-neutral-500 mt-1">
+                        Status: {section.assignedMaker.status}
+                      </p>
+                    </>
+                  )}
+                </div>
+              )
+            }
+            return (
+              <div>
+                <p className="text-green-600 font-semibold">✅ Available</p>
+                <p className="text-neutral-600 text-sm">Click to assign a maker</p>
+              </div>
+            )
+          })()}
         </div>
       )}
     </div>
