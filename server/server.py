@@ -1,5 +1,6 @@
 from config import create_app
-from login.routes import login_bp, set_socketio
+from login.routes import login_bp, set_socketio as set_login_socketio
+from station.routes import station_bp, set_socketio as set_station_socketio
 import os
 from flask_socketio import SocketIO
 
@@ -8,10 +9,12 @@ app = create_app()
 # Initialize SocketIO with CORS support
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-# Pass socketio instance to login routes
-set_socketio(socketio)
+# Pass socketio instance to route modules
+set_login_socketio(socketio)
+set_station_socketio(socketio)
 
 app.register_blueprint(login_bp)
+app.register_blueprint(station_bp)
 
 @app.route('/')
 def index():

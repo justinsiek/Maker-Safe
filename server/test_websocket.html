@@ -89,9 +89,20 @@
     <div id="status" class="status disconnected">Disconnected</div>
     
     <div class="test-section">
-        <h3>Test Login (simulates Pi sending login request)</h3>
+        <h3>1. Test Login (simulates Pi login camera detecting a maker)</h3>
         <input type="text" id="labelInput" placeholder="External label (e.g., 6767)" value="6767">
         <button onclick="testLogin()">Send Login Request</button>
+    </div>
+
+    <div class="test-section">
+        <h3>2. Test Station Enter (simulates Pi station camera detecting a maker)</h3>
+        <input type="text" id="stationLabelInput" placeholder="External label (e.g., 6767)" value="6767">
+        <input type="text" id="stationIdInput" placeholder="Station UUID" value="">
+        <button onclick="testStationEnter()">Send Station Enter</button>
+        <p style="color: #888; font-size: 12px; margin-top: 10px;">
+            Note: You need a valid station UUID from your database. 
+            First run login, then enter the station.
+        </p>
     </div>
     
     <div class="event-log">
@@ -133,6 +144,11 @@
             logEvent('maker_checked_in', data);
         });
 
+        // Listen for station entered events
+        socket.on('station_entered', (data) => {
+            logEvent('station_entered', data);
+        });
+
         // Test function to simulate Pi sending login request
         async function testLogin() {
             const label = document.getElementById('labelInput').value;
@@ -149,6 +165,33 @@
                 });
                 const data = await response.json();
                 logEvent('HTTP Response (POST /login/)', data);
+            } catch (error) {
+                logEvent('HTTP Error', { error: error.message });
+            }
+        }
+
+        // Test function to simulate Pi station camera detecting a maker
+        async function testStationEnter() {
+            const label = document.getElementById('stationLabelInput').value;
+            const stationId = document.getElementById('stationIdInput').value;
+            
+            if (!label) {
+                alert('Please enter an external label');
+                return;
+            }
+            if (!stationId) {
+                alert('Please enter a station UUID');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:8080/station/enter', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ external_label: label, station_id: stationId })
+                });
+                const data = await response.json();
+                logEvent('HTTP Response (POST /station/enter)', data);
             } catch (error) {
                 logEvent('HTTP Error', { error: error.message });
             }
