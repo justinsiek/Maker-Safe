@@ -11,8 +11,8 @@ import { ChevronDown } from "lucide-react"
 export default function Violations({ violations = [] }) {
   
   return (
-    <div className="p-8 bg-white h-full">
-      <h1 className="text-3xl font-light mx-4">Violations</h1>
+    <div className="p-8 bg-white h-full mx-4">
+      <h1 className="text-3xl font-light mb-4">Violations</h1>
       
       <Accordion type="single" collapsible className="space-y-4">
         {violations.map((violation) => (
@@ -24,7 +24,7 @@ export default function Violations({ violations = [] }) {
             <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-neutral-50 data-[state=open]:bg-blue-50">
               <div className="flex items-center justify-between w-full pr-4">
                 <div className="flex flex-col items-start gap-2">
-                  <span className="text-lg font-semibold text-neutral-900">
+                  <span className="text-xl font-light text-neutral-900">
                     {violation.name}
                   </span>
                   <span className={`${violation.severityColor} text-white px-3 py-1 rounded text-sm font-medium`}>
