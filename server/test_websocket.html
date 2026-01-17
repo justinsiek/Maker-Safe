@@ -122,6 +122,11 @@
         </p>
     </div>
 
+    <div class="test-section" style="border-left: 4px solid #28a745;">
+        <h3 style="color: #28a745;">5. Test Resolve Violation (simulates safety issue corrected)</h3>
+        <input type="text" id="resolveStationIdInput" placeholder="Station UUID" value="723740fc-d4d8-4990-998c-5660d3e19898">
+        <button onclick="testResolveViolation()" style="background: #28a745;">Resolve Violation</button>
+    </div>
     
     <div class="event-log">
         <h3>Event Log</h3>
@@ -175,6 +180,11 @@
         // Listen for violation events
         socket.on('violation_detected', (data) => {
             logEvent('violation_detected', data);
+        });
+
+        // Listen for violation resolved events
+        socket.on('violation_resolved', (data) => {
+            logEvent('violation_resolved', data);
         });
 
         // Test function to simulate Pi sending login request
@@ -282,6 +292,27 @@
             }
         }
 
+        // Test function to resolve a violation
+        async function testResolveViolation() {
+            const stationId = document.getElementById('resolveStationIdInput').value;
+            
+            if (!stationId) {
+                alert('Please enter a station UUID');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:8080/violation/resolve', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ station_id: stationId })
+                });
+                const data = await response.json();
+                logEvent('HTTP Response (POST /violation/resolve)', data);
+            } catch (error) {
+                logEvent('HTTP Error', { error: error.message });
+            }
+        }
     </script>
 </body>
 </html>

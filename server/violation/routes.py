@@ -160,3 +160,120 @@ def create_violation():
         
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+@violation_bp.route('/resolve', methods=['POST'])
+def resolve_violation():
+    """
+    Resolve a violation - called when the safety issue is corrected (e.g., goggles now worn).
+    
+    The station camera knows which station it is, and we look up the active violation.
+    
+    Expects JSON body:
+    {
+        "station_id": "uuid"  # The station UUID
+    }
+    
+    On success:
+    - Marks the violation as resolved (sets resolved_at)
+    - Updates maker_status back to 'active'
+    - Updates station_status back to 'in_use'
+    - Broadcasts 'violation_resolved' event via WebSocket
+    """
+    data = request.get_json()
+    
+    if not data:
+        return jsonify({"error": "Missing request body"}), 400
+    
+    station_id = data.get('station_id')
+    
+    if not station_id:
+        return jsonify({"error": "Missing station_id"}), 400
+    
+    if not supabase:
+        return jsonify({"error": "Database connection not available"}), 500
+    
+    try:
+        # Look up the station
+        station_response = supabase.table('stations').select('*').eq('id', station_id).execute()
+        
+        if not station_response.data or len(station_response.data) == 0:
+            return jsonify({"error": f"Station with id '{station_id}' not found"}), 404
+        
+        station = station_response.data[0]
+        
+        # Find the active violation at this station
+        violation_response = supabase.table('violations').select('*').eq(
+            'station_id', station_id
+        ).is_(
+            'resolved_at', 'null'
+        ).execute()
+        
+        if not violation_response.data or len(violation_response.data) == 0:
+            return jsonify({"error": "No active violation found at this station"}), 404
+        
+        violation = violation_response.data[0]
+        maker_id = violation['maker_id']
+        
+        # Get the maker details
+        maker_response = supabase.table('makers').select('*').eq('id', maker_id).execute()
+        
+        if not maker_response.data or len(maker_response.data) == 0:
+            return jsonify({"error": "Maker not found"}), 404
+        
+        maker = maker_response.data[0]
+        
+        # Mark violation as resolved
+        supabase.table('violations').update({
+            'resolved_at': 'now()'
+        }).eq('id', violation['id']).execute()
+        
+        # Update maker_status back to 'active'
+        supabase.table('maker_status').upsert({
+            'maker_id': maker_id,
+            'status': 'active',
+            'station_id': station_id,
+            'updated_at': 'now()'
+        }, on_conflict='maker_id').execute()
+        
+        # Update station_status back to 'in_use'
+        supabase.table('station_status').upsert({
+            'station_id': station_id,
+            'status': 'in_use',
+            'active_maker_id': maker_id,
+            'updated_at': 'now()'
+        }, on_conflict='station_id').execute()
+        
+        # Prepare data for response and WebSocket broadcast
+        event_data = {
+            "violation": {
+                "id": violation['id'],
+                "violation_type": violation['violation_type'],
+                "resolved": True
+            },
+            "maker": {
+                "id": maker_id,
+                "display_name": maker['display_name'],
+                "external_label": maker['external_label'],
+                "status": "active"
+            },
+            "station": {
+                "id": station_id,
+                "name": station['name'],
+                "status": "in_use"
+            }
+        }
+        
+        # Broadcast to all connected WebSocket clients
+        if _socketio:
+            _socketio.emit('violation_resolved', event_data)
+            print(f"WebSocket: Emitted 'violation_resolved' - {maker['display_name']} at {station['name']}")
+        
+        return jsonify({
+            "success": True,
+            "message": f"Violation resolved for {maker['display_name']} at {station['name']}",
+            **event_data
+        }), 200
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
