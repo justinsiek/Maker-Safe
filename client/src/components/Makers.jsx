@@ -18,8 +18,8 @@ export default function Makers({ makers = [] }) {
   };
 
   return (
-    <div className="p-8 bg-gray-50 h-1/2">
-      <h1 className="text-2xl font-bold text-neutral-900 mb-8">Makers in Shop</h1>
+    <div className="p-8 h-1/2">
+      <h1 className="text-2xl font-bold text-neutral-900 mb-8">Makers</h1>
       
       <div className="flex flex-col gap-4 overflow-y-auto h-[80%]">
         {makers.length === 0 ? (

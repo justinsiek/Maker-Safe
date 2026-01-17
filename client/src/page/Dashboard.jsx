@@ -332,7 +332,7 @@ export default function Dashboard() {
 
     return (
         <div className="flex flex-row h-screen w-screen">
-            <div className="flex flex-col bg-gray-50 h-screen w-[50%]">
+            <div className="flex flex-col h-screen w-[50%]">
                 <Makers makers={makers} />
                 <MapComponent makers={makers} stations={stations} />
             </div>
