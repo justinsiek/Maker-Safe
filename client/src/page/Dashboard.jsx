@@ -38,6 +38,7 @@ export default function Dashboard() {
     }
 
     // Fetch initial state from server
+// Fetch initial state from server
     const fetchInitialState = async () => {
         try {
             const response = await fetch('http://localhost:8080/state')
@@ -62,7 +63,7 @@ export default function Dashboard() {
                 setStations(data.stations.map(s => ({
                     id: s.id,
                     name: s.name,
-                    status: s.status,
+                    inUse: s.in_use,  // Changed from 'status' to 'inUse' (camelCase for JS)
                     assignedMakerId: s.active_maker_id,
                     assignedMakerName: null, // Will be filled from makers
                 })))
