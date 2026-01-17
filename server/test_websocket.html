@@ -111,6 +111,17 @@
         <input type="text" id="leaveStationIdInput" placeholder="Station UUID" value="">
         <button onclick="testStationLeave()">Send Station Leave</button>
     </div>
+
+    <div class="test-section" style="border-left: 4px solid #dc3545;">
+        <h3 style="color: #dc3545;">4. Test Violation (simulates safety violation detected)</h3>
+        <input type="text" id="violationStationIdInput" placeholder="Station UUID" value="">
+        <input type="text" id="violationTypeInput" placeholder="Violation type" value="GOGGLES_NOT_WORN">
+        <button onclick="testViolation()" style="background: #dc3545;">Create Violation</button>
+        <p style="color: #888; font-size: 12px; margin-top: 10px;">
+            Note: Maker is automatically determined from who's at the station.
+        </p>
+    </div>
+
     
     <div class="event-log">
         <h3>Event Log</h3>
@@ -159,6 +170,11 @@
         // Listen for station left events
         socket.on('station_left', (data) => {
             logEvent('station_left', data);
+        });
+
+        // Listen for violation events
+        socket.on('violation_detected', (data) => {
+            logEvent('violation_detected', data);
         });
 
         // Test function to simulate Pi sending login request
@@ -235,6 +251,37 @@
                 logEvent('HTTP Error', { error: error.message });
             }
         }
+
+        // Test function to simulate a violation being detected
+        async function testViolation() {
+            const stationId = document.getElementById('violationStationIdInput').value;
+            const violationType = document.getElementById('violationTypeInput').value;
+            
+            if (!stationId) {
+                alert('Please enter a station UUID');
+                return;
+            }
+            if (!violationType) {
+                alert('Please enter a violation type');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:8080/violation/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        station_id: stationId,
+                        violation_type: violationType
+                    })
+                });
+                const data = await response.json();
+                logEvent('HTTP Response (POST /violation/)', data);
+            } catch (error) {
+                logEvent('HTTP Error', { error: error.message });
+            }
+        }
+
     </script>
 </body>
 </html>
