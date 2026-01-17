@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { io } from 'socket.io-client'
 import Makers from '../components/Makers.jsx'
 import Violations from '../components/Violation.jsx'
 import MapComponent from '../components/MapComponent.jsx'
 
 export default function Dashboard() {
+    const navigate = useNavigate()
     const [makers, setMakers] = useState([])
     const [stations, setStations] = useState([])
     const [violations, setViolations] = useState([])
@@ -331,13 +333,27 @@ export default function Dashboard() {
     }, [])
 
     return (
-        <div className="flex flex-row h-screen w-screen">
-            <div className="flex flex-col h-screen w-[50%]">
-                <Makers makers={makers} />
-                <MapComponent makers={makers} stations={stations} />
-            </div>
-            <div className="flex flex-col bg-white h-screen w-[50%] overflow-y-auto">
-                <Violations violations={violations} />
+        <div className="flex flex-col h-screen w-screen">
+            {/* Navbar */}
+            <nav className="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200">
+                <span className="text-2xl font-light">Maker<span className="text-blue-500">Safe</span></span>
+                <button 
+                    onClick={() => navigate('/')}
+                    className="text-black px-4 py-2 rounded-lg text-sm font-light cursor-pointer"
+                >
+                    Log Out
+                </button>
+            </nav>
+            
+            {/* Main Content */}
+            <div className="flex flex-row flex-1 overflow-hidden">
+                <div className="flex flex-col w-[50%] min-h-0">
+                    <Makers makers={makers} />
+                    <MapComponent makers={makers} stations={stations} />
+                </div>
+                <div className="flex flex-col bg-white w-[50%] overflow-y-auto">
+                    <Violations violations={violations} />
+                </div>
             </div>
         </div>
     )

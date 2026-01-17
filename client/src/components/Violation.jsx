@@ -12,7 +12,7 @@ export default function Violations({ violations = [] }) {
   
   return (
     <div className="p-8 bg-white h-full">
-      <h1 className="text-2xl font-bold text-neutral-900 mb-8">Violations</h1>
+      <h1 className="text-3xl font-light mx-4">Violations</h1>
       
       <Accordion type="single" collapsible className="space-y-4">
         {violations.map((violation) => (

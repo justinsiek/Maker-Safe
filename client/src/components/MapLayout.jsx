@@ -153,10 +153,12 @@ export default function MapLayout({ className = "", makers = [], stations = [] }
   }
 
   return (
-    <div className="relative w-full h-full">
+    <div className="relative w-full h-full flex flex-col px-4 min-h-0">
+      <h1 className="text-3xl font-light mx-4 flex-shrink-0">Stations</h1>
       <svg
-        viewBox="0 0 750 430"
-        className={className}
+        viewBox="40 40 680 360"
+        preserveAspectRatio="xMidYMid meet"
+        className={`${className} flex-1 min-h-0`}
         xmlns="http://www.w3.org/2000/svg"
       >
         {/* Community room - drawn first with no stroke, walls added separately */}
