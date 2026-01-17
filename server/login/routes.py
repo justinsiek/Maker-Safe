@@ -6,6 +6,14 @@ from config import supabase
 
 login_bp = Blueprint('login', __name__, url_prefix='/login')
 
+# SocketIO instance (set by server.py)
+_socketio = None
+
+def set_socketio(socketio):
+    """Set the SocketIO instance for emitting events."""
+    global _socketio
+    _socketio = socketio
+
 
 @login_bp.route('/', methods=['POST'])
 def login():
@@ -18,6 +26,7 @@ def login():
     }
     
     On success, marks the maker as 'idle' (present in the makerspace).
+    Broadcasts 'maker_checked_in' event via WebSocket to all connected clients.
     """
     data = request.get_json()
     
@@ -50,15 +59,23 @@ def login():
             'updated_at': 'now()'
         }, on_conflict='maker_id').execute()
         
+        # Prepare maker data for response and WebSocket broadcast
+        maker_data = {
+            "id": maker_id,
+            "display_name": maker['display_name'],
+            "external_label": maker['external_label'],
+            "status": "idle"
+        }
+        
+        # Broadcast to all connected WebSocket clients
+        if _socketio:
+            _socketio.emit('maker_checked_in', maker_data)
+            print(f"WebSocket: Emitted 'maker_checked_in' for {maker['display_name']}")
+        
         return jsonify({
             "success": True,
             "message": f"Maker '{maker['display_name']}' checked in",
-            "maker": {
-                "id": maker_id,
-                "display_name": maker['display_name'],
-                "external_label": maker['external_label'],
-                "status": "idle"
-            }
+            "maker": maker_data
         }), 200
         
     except Exception as e:

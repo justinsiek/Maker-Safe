@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Test - MakerSafe</title>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #1a1a2e;
+            color: #eee;
+        }
+        h1 { color: #00d9ff; }
+        .status {
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .connected { background: #0f5132; color: #75b798; }
+        .disconnected { background: #842029; color: #f5c2c7; }
+        .event-log {
+            background: #16213e;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .event {
+            background: #1f4068;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            border-left: 4px solid #00d9ff;
+        }
+        .event-time {
+            color: #888;
+            font-size: 12px;
+        }
+        .event-name {
+            color: #00d9ff;
+            font-weight: bold;
+        }
+        .event-data {
+            background: #0f3460;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .test-section {
+            background: #16213e;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        button {
+            background: #00d9ff;
+            color: #1a1a2e;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        button:hover { background: #00b8d9; }
+        button:disabled { background: #555; cursor: not-allowed; }
+        input {
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #333;
+            background: #0f3460;
+            color: #eee;
+            margin-right: 10px;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h1>MakerSafe WebSocket Test</h1>
+    
+    <div id="status" class="status disconnected">Disconnected</div>
+    
+    <div class="test-section">
+        <h3>Test Login (simulates Pi sending login request)</h3>
+        <input type="text" id="labelInput" placeholder="External label (e.g., 6767)" value="6767">
+        <button onclick="testLogin()">Send Login Request</button>
+    </div>
+    
+    <div class="event-log">
+        <h3>Event Log</h3>
+        <div id="events"></div>
+    </div>
+
+    <script>
+        const socket = io('http://localhost:8080');
+        const statusEl = document.getElementById('status');
+        const eventsEl = document.getElementById('events');
+
+        function logEvent(name, data) {
+            const time = new Date().toLocaleTimeString();
+            const eventHtml = `
+                <div class="event">
+                    <span class="event-time">${time}</span>
+                    <span class="event-name">${name}</span>
+                    <div class="event-data">${JSON.stringify(data, null, 2)}</div>
+                </div>
+            `;
+            eventsEl.innerHTML = eventHtml + eventsEl.innerHTML;
+        }
+
+        socket.on('connect', () => {
+            statusEl.textContent = 'Connected';
+            statusEl.className = 'status connected';
+            logEvent('connect', { message: 'Connected to WebSocket server' });
+        });
+
+        socket.on('disconnect', () => {
+            statusEl.textContent = 'Disconnected';
+            statusEl.className = 'status disconnected';
+            logEvent('disconnect', { message: 'Disconnected from WebSocket server' });
+        });
+
+        // Listen for maker check-in events
+        socket.on('maker_checked_in', (data) => {
+            logEvent('maker_checked_in', data);
+        });
+
+        // Test function to simulate Pi sending login request
+        async function testLogin() {
+            const label = document.getElementById('labelInput').value;
+            if (!label) {
+                alert('Please enter an external label');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:8080/login/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ external_label: label })
+                });
+                const data = await response.json();
+                logEvent('HTTP Response (POST /login/)', data);
+            } catch (error) {
+                logEvent('HTTP Error', { error: error.message });
+            }
+        }
+    </script>
+</body>
+</html>

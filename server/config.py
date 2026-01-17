@@ -25,12 +25,8 @@ def create_app():
     """Flask application factory."""
     app = Flask(__name__)
 
-    # Configure CORS properly
-    CORS(
-        app,
-        origins=os.getenv('CORS_ORIGINS', "http://localhost:3000").split(','), # Allow multiple origins from env var
-        supports_credentials=True
-    )
+    # Configure CORS - allow all origins for development
+    CORS(app, resources={r"/*": {"origins": "*"}})
 
     print("Flask app created and CORS configured.")
-    return app 
+    return app
