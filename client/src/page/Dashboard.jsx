@@ -7,7 +7,7 @@ import MapComponent from '../components/MapComponent.jsx'
 export default function Dashboard() {
     const [makers, setMakers] = useState([])
     const [stations, setStations] = useState([])
-    const [violations, setViolations] = useState([])  // ADD THIS
+    const [violations, setViolations] = useState([])
     const [socket, setSocket] = useState(null)
 
     // Helper function to get initials from name
@@ -137,7 +137,46 @@ export default function Dashboard() {
             }
         })
 
-        // *** ADD THIS: Listen for violation_detected events ***
+        // Listen for station_left events
+        newSocket.on('station_left', (data) => {
+            console.log('Station left:', data)
+            
+            const { maker, station } = data
+
+            // Update maker - clear station assignment and set status to idle
+            if (maker) {
+                setMakers((prevMakers) => {
+                    return prevMakers.map(m => 
+                        m.id === maker.id 
+                            ? { 
+                                ...m, 
+                                status: maker.status,
+                                stationId: null,
+                                stationName: null,
+                              }
+                            : m
+                    )
+                })
+            }
+
+            // Update station - clear assignment and set status to idle/available
+            if (station) {
+                setStations((prevStations) => {
+                    return prevStations.map(s => 
+                        s.id === station.id 
+                            ? { 
+                                ...s, 
+                                status: station.status,
+                                assignedMakerId: null,
+                                assignedMakerName: null,
+                              }
+                            : s
+                    )
+                })
+            }
+        })
+
+        // Listen for violation_detected events
         newSocket.on('violation_detected', (data) => {
             console.log('Violation detected:', data)
             
@@ -188,7 +227,6 @@ export default function Dashboard() {
                 }
 
                 setViolations((prevViolations) => {
-                    // Add to beginning of list (newest first)
                     return [newViolation, ...prevViolations]
                 })
             }
@@ -238,7 +276,7 @@ export default function Dashboard() {
                 <MapComponent makers={makers} stations={stations} />
             </div>
             <div className="flex flex-col bg-white h-screen w-[50%] overflow-y-auto">
-                <Violations violations={violations} />  {/* PASS violations */}
+                <Violations violations={violations} />
             </div>
         </div>
     )
