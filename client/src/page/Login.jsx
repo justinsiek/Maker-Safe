@@ -228,8 +228,7 @@ export default function Login() {
 
           {/* Optional: Subtle branding in the corner of the gradient area */}
           <div className="absolute bottom-12 right-12 text-right">
-             <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.4em] mb-1">Safety Infrastructure</p>
-             <p className="text-white/20 text-xs font-bold italic uppercase tracking-tighter">Powered by Viam & SenseCAP</p>
+             <p className="text-white/20 text-xs font-bold uppercase tracking-tighter">Powered by Viam</p>
           </div>
         </div>
       </div>
