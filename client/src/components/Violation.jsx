@@ -27,6 +27,7 @@ export default function Violations({ violations = [] }) {
               value={violation.id}
               className="border-2 border-neutral-200 rounded-lg overflow-hidden data-[state=open]:border-[#A100FF]"
             >
+              
               <AccordionTrigger className="px-4 py-4 hover:no-underline hover:bg-neutral-50 data-[state=open]:bg-purple-50">
                 <div className="flex items-center gap-3 w-full justify-around">
                   {/* Name and Violation Row */}
@@ -41,10 +42,17 @@ export default function Violations({ violations = [] }) {
                     </div>
                   </div>
                   
-                  {/* Time Separate Row */}
-                  <div className="w-full flex justify-center items-center">
+                  {/* Time and Date Column */}
+                  <div className="w-full flex flex-col justify-center items-center gap-1">
                     <span className="text-xs text-neutral-500 font-normal">
                       {violation.time}
+                    </span>
+                    <span className="text-xs text-neutral-400 font-normal">
+                      {new Date(violation.createdAt).toLocaleDateString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric', 
+                        year: 'numeric' 
+                      })}
                     </span>
                   </div>
                 </div>
