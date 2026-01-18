@@ -1,7 +1,8 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import React from 'react';
-import logo from '@/assets/logo.png'
-import makersafe from '@/assets/makersafe.png'
+// import logo from '@/assets/logo.png'
+import logo from '@/assets/logo-inverted.png'
+import makersafe from '@/assets/word-inverted.png'
+// import makersafe from '@/assets/makersafe.png'
 
 export default function Nav({ handleLogout = null, handleReset = null }) {
     const navigate = useNavigate();
@@ -56,7 +57,7 @@ export default function Nav({ handleLogout = null, handleReset = null }) {
     };
 
     return (
-        <nav className="flex items-center justify-between px-6 py-2 bg-white border-b border-gray-200">
+        <nav className="flex items-center justify-between px-6 py-3 bg-accent border-b-3 border-accent-hover bg-accent">
             <div 
                 className="flex cursor-pointer justify-center items-center" 
                 onClick={handleLogoClick}
@@ -69,9 +70,9 @@ export default function Nav({ handleLogout = null, handleReset = null }) {
                 {isLoggedIn && (
                     <button 
                         onClick={onReset}
-                        className="text-white px-4 py-2 rounded-lg text-sm font-medium cursor-pointer hover:bg-gray-100 transition-colors"
+                        className="text-accent px-4 py-2 rounded-lg text-sm font-medium cursor-pointer hover:bg-accent-hover transition-colors"
                     >
-                        Reset
+                        Reset System
                     </button>
                 )}
                 
@@ -79,16 +80,16 @@ export default function Nav({ handleLogout = null, handleReset = null }) {
                 {isLoggedIn ? (
                     <button 
                         onClick={onLogout}
-                        className="text-black px-4 py-2 rounded-lg text-sm font-medium cursor-pointer hover:bg-gray-100 transition-colors"
+                        className="text-white px-4 py-2 rounded-lg text-sm font-medium cursor-pointer hover:bg-accent-hover transition-colors"
                     >
                         Log Out
                     </button>
                 ) : (
                     <button 
-                        onClick={handleLoginClick}
-                        className="bg-[#A100FF] hover:bg-[#8B00E6] text-white px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition-colors"
+                        onClick={onLogout}
+                        className="text-white px-4 py-2 rounded-lg text-sm font-medium cursor-pointer hover:bg-gray-100 transition-colors"
                     >
-                        Log In
+                        Log Out
                     </button>
                 )}
             </div>

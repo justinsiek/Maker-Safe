@@ -1,7 +1,6 @@
 import { useState } from "react"
-import { AlertTriangle, X, Volume2, VolumeX } from "lucide-react"
+import { AlertTriangle, X, Megaphone } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Megaphone } from "lucide-react"
 
 export default function SafetyAlerts() {
   const demoAlerts = [
@@ -18,8 +17,6 @@ export default function SafetyAlerts() {
       timestamp: new Date(),
     }))
   )
-  const [soundEnabled, setSoundEnabled] = useState(true)
-
   const dismissAlert = (id) => {
     setAlerts(alerts.filter((a) => a.id !== id))
   }
@@ -31,19 +28,12 @@ export default function SafetyAlerts() {
       <div className="flex flex-col mb-3">
         <div className="flex items-center justify-between mb-2">
           <div className="flex gap-2">
-            <Megaphone className="w-6 h-6 text-[#A100FF]" />
+            <Megaphone className="w-6 h-6 text-accent" />
             <h1 className="text-xl font-semibold">Live Announcements</h1>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setSoundEnabled(!soundEnabled)}
-            className="h-8 w-8 p-0"
-          >
-          </Button>
         </div>
         {/* Accent underline */}
-        <div className="w-62 h-1 bg-[#A100FF] rounded-full"></div>
+        <div className="w-62 h-1 bg-accent rounded-full"></div>
       </div>
 
       <div className="flex-1 overflow-y-auto scrollbar-hide">
@@ -54,7 +44,7 @@ export default function SafetyAlerts() {
               className="flex items-start gap-3 p-4 rounded-lg bg-white animate-in slide-in-from-top-2"
             >
               <AlertTriangle
-                className="w-4 h-4 mt-0.5 shrink-0 text-[#A100FF]"
+                className="w-4 h-4 mt-0.5 shrink-0 text-accent"
               />
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-neutral-900">{alert.message}</p>

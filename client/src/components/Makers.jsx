@@ -33,11 +33,11 @@ export default function Makers({ makers = [] }) {
     <div className="flex flex-col px-6 shrink-0 h-1/4 my-4 rounded-lg py-4 bg-gray-100">
         <div className="flex flex-col">
           <div className="flex gap-2 mb-2">
-            <Users className="w-6 h-6 text-[#A100FF]" />
+            <Users className="w-6 h-6 text-accent" />
             <h1 className="text-xl font-semibold">Active Makers</h1>
           </div>
           {/* Accent underline */}
-          <div className="w-44 h-1 bg-[#A100FF] rounded-full mb-3"></div>
+          <div className="w-44 h-1 bg-accent rounded-full mb-3"></div>
         </div>
         <div className="flex justify-start w-full gap-3 overflow-x-auto overflow-y-hidden">
           {makers.length === 0 ? (

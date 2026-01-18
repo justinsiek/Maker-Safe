@@ -12,11 +12,11 @@ export default function Violations({ violations = [] }) {
     <div className="flex flex-col h-[45%] rounded-lg overflow-hidden my-4 px-6 py-4 bg-surface relative">
       <div className="flex flex-col mb-3">
         <div className="flex gap-2 mb-2">
-          <AlertTriangle className="w-6 h-6 text-[#A100FF]" />
+          <AlertTriangle className="w-6 h-6 text-accent" />
           <h1 className="text-xl font-semibold">Violations</h1>
         </div>
         {/* Accent underline */}
-        <div className="w-34 h-1 bg-[#A100FF] rounded-full"></div>
+        <div className="w-34 h-1 bg-accent rounded-full"></div>
       </div>
 
       <div className="flex-1 overflow-y-auto scrollbar-hide pb-8">
@@ -25,7 +25,7 @@ export default function Violations({ violations = [] }) {
             <AccordionItem 
               key={violation.id} 
               value={violation.id}
-              className="border-2 border-neutral-200 rounded-lg overflow-hidden data-[state=open]:border-[#A100FF]"
+              className="border-2 border-neutral-200 rounded-lg overflow-hidden data-[state=open]:border-accent"
             >
               
               <AccordionTrigger className="px-4 py-4 hover:no-underline hover:bg-neutral-50 data-[state=open]:bg-purple-50">
