@@ -4,6 +4,7 @@ import { io } from 'socket.io-client'
 import Makers from '../components/Makers.jsx'
 import Violations from '../components/Violation.jsx'
 import MapComponent from '../components/MapComponent.jsx'
+import LiveAlert from '../components/LiveAlert.jsx'
 
 export default function Dashboard() {
     const navigate = useNavigate()
@@ -37,7 +38,6 @@ export default function Dashboard() {
         return highSeverity.includes(violationType) ? 'bg-red-600' : 'bg-neutral-600'
     }
 
-    // Fetch initial state from server
 // Fetch initial state from server
     const fetchInitialState = async () => {
         try {
@@ -333,26 +333,57 @@ export default function Dashboard() {
         }
     }, [])
 
+    // Add this function inside Dashboard component (before the return statement)
+    const handleLogout = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/logout', {
+                method: 'POST'
+            })
+            
+            const data = await response.json()
+            
+            if (data.success) {
+                console.log('System reset successful:', data.message)
+                setMakers([])
+                setStations([])
+                setViolations([])
+                
+                if (socket) {
+                    socket.disconnect()
+                }
+                
+                navigate('/')
+            } else {
+                console.error('Logout failed:', data.error)
+                alert('Failed to reset system: ' + (data.error || 'Unknown error'))
+            }
+        } catch (error) {
+            console.error('Error calling logout:', error)
+            alert('Failed to connect to server')
+        }
+    }
+
     return (
-        <div className="flex flex-col h-screen w-screen">
+        <div className="flex flex-col h-screen w-screen overflow-hidden">
             {/* Navbar */}
-            <nav className="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200">
-                <span className="text-2xl font-light">Maker<span className="text-blue-500">Safe</span></span>
+            <nav className="flex items-center justify-between px-6 py-2 bg-white border-b border-gray-200">
+                <span className="text-lg font-semibold">Maker<span className="text-blue-500">Safe</span></span>
                 <button 
-                    onClick={() => navigate('/')}
-                    className="text-black px-4 py-2 rounded-lg text-sm font-light cursor-pointer"
+                    onClick={handleLogout}
+                    className="text-black px-4 py-2 rounded-lg text-sm font-medium cursor-pointer hover:bg-gray-100 transition-colors"
                 >
                     Log Out
                 </button>
             </nav>
             
             {/* Main Content */}
-            <div className="flex flex-row flex-1 overflow-hidden">
-                <div className="flex flex-col w-[50%] min-h-0">
+            <div className="flex overflow-hidden">
+                <div className="flex flex-col w-[60%] h-full px-6">
                     <Makers makers={makers} />
                     <MapComponent makers={makers} stations={stations} />
                 </div>
-                <div className="flex flex-col bg-white w-[50%] overflow-y-auto">
+                <div className="flex flex-col bg-white w-[40%] overflow-y-auto scrollbar-hide h-[90%]">
+                    <LiveAlert />
                     <Violations violations={violations} />
                 </div>
             </div>

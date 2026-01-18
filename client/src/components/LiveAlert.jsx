@@ -1,0 +1,87 @@
+import { useState } from "react"
+import { AlertTriangle, X, Volume2, VolumeX } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+
+export default function SafetyAlerts() {
+  const demoAlerts = [
+    "Equipment maintenance due for Laser Cutter",
+    "Machine temperature warning at 3D Printer station",
+    "Station offline: Soldering Iron equipment not responding",
+  ]
+
+  const [alerts, setAlerts] = useState(
+    demoAlerts.map((message, index) => ({
+      id: index,
+      message,
+      type: Math.random() > 0.5 ? "warning" : "critical",
+      timestamp: new Date(),
+    }))
+  )
+  const [soundEnabled, setSoundEnabled] = useState(true)
+
+  const dismissAlert = (id) => {
+    setAlerts(alerts.filter((a) => a.id !== id))
+  }
+
+  if (alerts.length === 0) return null
+
+  return (
+    <div className="flex flex-col h-1/2 border my-4 rounded-lg p-4">
+      <div className="py-0 shrink-">
+        <div className="flex items-center justify-between">
+          <h1 className="text-xl font-semibold">Live Alerts</h1>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setSoundEnabled(!soundEnabled)}
+            className="h-8 w-8 p-0"
+          >
+            {soundEnabled ? (
+              <Volume2 className="w-4 h-4" />
+            ) : (
+              <VolumeX className="w-4 h-4 text-neutral-400" />
+            )}
+          </Button>
+        </div>
+      </div>
+
+      <div className="flex-1 overflow-y-auto scrollbar-hide">
+        <div className="space-y-4">
+          {alerts.map((alert) => (
+            <div
+              key={alert.id}
+              className={cn(
+                "flex items-start gap-3 p-4 rounded-lg border-2 animate-in slide-in-from-top-2",
+                alert.type === "critical"
+                  ? "bg-red-50 border-red-200"
+                  : "bg-orange-50 border-orange-200"
+              )}
+            >
+              <AlertTriangle
+                className={cn(
+                  "w-4 h-4 mt-0.5 shrink-0",
+                  alert.type === "critical" ? "text-red-600" : "text-orange-600"
+                )}
+              />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-neutral-900">{alert.message}</p>
+                <p className="text-xs text-neutral-500 font-normal mt-1">
+                  {alert.timestamp.toLocaleTimeString()}
+                </p>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => dismissAlert(alert.id)}
+                className="h-6 w-6 p-0 shrink-0"
+              >
+                <X className="w-3 h-3" />
+              </Button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}

@@ -154,10 +154,10 @@ export default function MapLayout({ className = "", makers = [], stations = [] }
 
   return (
     <div className="relative w-full h-full flex flex-col px-4 min-h-0">
-      <h1 className="text-3xl font-light mx-4 flex-shrink-0">Stations</h1>
+      <h1 className="text-2xl font-light mx-4 mb-2 flex-shrink-0">Stations</h1>
       <svg
-        viewBox="40 40 680 360"
-        preserveAspectRatio="xMidYMid meet"
+        viewBox="45 45 660 340"
+        preserveAspectRatio="xMidYMin meet"
         className={`${className} flex-1 min-h-0`}
         xmlns="http://www.w3.org/2000/svg"
       >
@@ -172,8 +172,8 @@ export default function MapLayout({ className = "", makers = [], stations = [] }
           x="390"
           y="294"
           textAnchor="middle"
-          fontSize="14"
-          fontWeight="600"
+          fontSize="12"
+          fontWeight="500"
           fill="#1a1a1a"
           pointerEvents="none"
         >
@@ -201,7 +201,7 @@ export default function MapLayout({ className = "", makers = [], stations = [] }
                 x={section.centerX}
                 y={section.isStation ? section.centerY - 12 : section.centerY + 4}
                 textAnchor="middle"
-                fontSize={section.isUtility ? "11" : "14"}
+                fontSize={section.isUtility ? "11" : "12"}
                 fontWeight="600"
                 fill={section.isUtility ? "#737373" : "#1a1a1a"}
                 pointerEvents="none"
@@ -242,15 +242,10 @@ export default function MapLayout({ className = "", makers = [], stations = [] }
         ))}
         
         {/* Additional walls for community area */}
-        {/* Left wall of community (from bottom of woodworking down) */}
         <line x1="200" y1="220" x2="200" y2="380" stroke="#1a1a1a" strokeWidth="2.5" />
-        {/* Bottom wall of community */}
         <line x1="200" y1="380" x2="580" y2="380" stroke="#1a1a1a" strokeWidth="2.5" />
-        {/* Right wall of community (partial, from electronics bottom to office) */}
         <line x1="580" y1="220" x2="580" y2="380" stroke="#1a1a1a" strokeWidth="2.5" />
-        {/* Diagonal wall from electronics to community */}
         <line x1="420" y1="160" x2="470" y2="220" stroke="#1a1a1a" strokeWidth="2.5" />
-        {/* Top-right wall of community (from diagonal to office) */}
         <line x1="470" y1="220" x2="580" y2="220" stroke="#1a1a1a" strokeWidth="2.5" />
         
         {/* Outer boundary */}
@@ -264,47 +259,6 @@ export default function MapLayout({ className = "", makers = [], stations = [] }
           strokeWidth="3"
         />
       </svg>
-      
-      {/* Hover Tooltip */}
-      {hoveredSection && (
-        <div className="absolute top-4 right-4 bg-white border border-neutral-200 rounded-lg p-4 shadow-lg z-10">
-          <h3 className="font-semibold text-lg mb-2">
-            {sections.find(s => s.id === hoveredSection)?.name}
-          </h3>
-          {(() => {
-            const section = sections.find(s => s.id === hoveredSection)
-            if (section?.status === 'violation') {
-              return (
-                <div>
-                  <p className="text-red-600 font-semibold mb-1">⚠️ Violation</p>
-                  {section.assignedMaker && (
-                    <p className="text-neutral-600">
-                      Maker: <span className="font-semibold">{section.assignedMaker.name}</span>
-                    </p>
-                  )}
-                </div>
-              )
-            }
-            if (section?.status === 'in_use' || section?.assignedMaker) {
-              return (
-                <div>
-                  <p className="text-yellow-600 font-semibold mb-1">🔶 In Use</p>
-                  {section.assignedMaker && (
-                    <p className="text-neutral-600">
-                      Maker: <span className="font-semibold">{section.assignedMaker.name}</span>
-                    </p>
-                  )}
-                </div>
-              )
-            }
-            return (
-              <div>
-                <p className="text-green-600 font-semibold">✅ Available</p>
-              </div>
-            )
-          })()}
-        </div>
-      )}
     </div>
   )
 }

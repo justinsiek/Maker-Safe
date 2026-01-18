@@ -1,5 +1,3 @@
-import { motion } from "framer-motion"
-
 export default function Makers({ makers = [] }) {
 
   const getStatusColor = (status) => {
@@ -31,34 +29,45 @@ export default function Makers({ makers = [] }) {
   };
 
   return (
-    <div className="p-8 flex-shrink-0">
-      <h1 className="text-3xl font-light mb-6">Makers</h1>
-      <div className="flex flex-wrap gap-4 overflow-y-auto max-h-[40vh]">
-        {makers.length === 0 ? (
-          <p className="text-neutral-500">No makers checked in</p>
-        ) : (
-          makers.map((maker) => (
-            <div className={`w-48 h-60 py-5 px-4 flex flex-col items-center rounded-xl border-3 ${getCardStyles(maker.status)}`}>
-              {/* Avatar */}
-              <div className={`${getStatusColor(maker.status)} w-20 h-20 rounded-full flex items-center justify-center text-white font-medium text-xl mb-3`}>
-                {maker.initials}
+    <div className="flex items-center px-6 shrink-0 h-[22%] border border-gray-600 my-4 rounded-lg">
+      <div className="w-full">
+        <h1 className="text-xl font-semibold mb-3">Active Makers</h1>
+        <div className="flex w-full justify-evenly overflow-x-auto overflow-y-hidden">
+          {makers.length === 0 ? (
+            <p className="text-neutral-500">No makers checked in</p>
+          ) : (
+            makers.map((maker) => (
+              <div 
+                key={maker.id}
+                className={`h-24 py-3 px-10 flex flex-row items-center gap-4 rounded-xl border-2 flex-shrink-0 ${getCardStyles(maker.status)}`}
+              >
+                {/* Avatar */}
+                <div className={`${getStatusColor(maker.status)} w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold text-base flex-shrink-0`}>
+                  {maker.initials}
+                </div>
+                
+                {/* Name and Status */}
+                <div className="flex flex-col justify-center">
+                  <h3 className="text-sm font-medium text-neutral-900 leading-tight">
+                    {maker.name}
+                  </h3>
+                  <span className={`mt-1 px-2 py-0.5 rounded text-white text-xs font-medium w-fit ${getStatusColor(maker.status)}`}>
+                    {maker.status}
+                  </span>
+                  {maker.stationName && (
+                    <span className="text-xs text-neutral-500 font-normal mt-1">
+                      @ {maker.stationName}
+                    </span>
+                  )}
+                </div>
               </div>
-              
-              {/* Info */}
-              <h3 className="text-xl font-light text-neutral-900 text-center leading-tight mb-2">
-                {maker.name}
-              </h3>
-              <span className={`px-3 py-1 rounded text-white text-sm font-medium ${getStatusColor(maker.status)}`}>
-                {maker.status}
-              </span>
-              {/* Always reserve space for station name */}
-              <span className="text-sm text-neutral-500 mt-2 text-center h-5">
-                {maker.stationName ? `@ ${maker.stationName}` : ''}
-              </span>
-            </div>
-          ))
-        )}
+            ))
+          )}
+        </div>
       </div>
+
     </div>
   );
 }
+
+
