@@ -28,10 +28,10 @@ export default function SafetyAlerts() {
 
   return (
     <div className="flex flex-col h-1/3 rounded-lg px-6 py-4 bg-surface">
-      <div className="py-0 shrink-">
-        <div className="flex items-center justify-between">
+      <div className="flex flex-col mb-3">
+        <div className="flex items-center justify-between mb-2">
           <div className="flex gap-2">
-            <Megaphone className="w-6 h-6 text-accent" />
+            <Megaphone className="w-6 h-6 text-[#A100FF]" />
             <h1 className="text-xl font-semibold">Live Announcements</h1>
           </div>
           <Button
@@ -40,13 +40,10 @@ export default function SafetyAlerts() {
             onClick={() => setSoundEnabled(!soundEnabled)}
             className="h-8 w-8 p-0"
           >
-            {soundEnabled ? (
-              <Volume2 className="w-4 h-4" />
-            ) : (
-              <VolumeX className="w-4 h-4 text-neutral-400" />
-            )}
           </Button>
         </div>
+        {/* Accent underline */}
+        <div className="w-62 h-1 bg-[#A100FF] rounded-full"></div>
       </div>
 
       <div className="flex-1 overflow-y-auto scrollbar-hide">
@@ -54,10 +51,10 @@ export default function SafetyAlerts() {
           {alerts.map((alert) => (
             <div
               key={alert.id}
-              className="flex items-start gap-3 p-4 rounded-lg  bg-white animate-in slide-in-from-top-2"
+              className="flex items-start gap-3 p-4 rounded-lg bg-white animate-in slide-in-from-top-2"
             >
               <AlertTriangle
-                className="w-4 h-4 mt-0.5 shrink-0 text-accent"
+                className="w-4 h-4 mt-0.5 shrink-0 text-[#A100FF]"
               />
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-neutral-900">{alert.message}</p>

@@ -377,7 +377,7 @@ export default function Dashboard() {
             <Nav handleReset={handleReset} handleLogout={handleLogout} />
             <StickyBanner className="bg-accent">
                 <p className="text-white">
-                    Makerspace will be closed for maintenance on January 19th to observe Martin Luther King Jr. Day.
+                    Makerspace will be closed on January 19th in observance of Martin Luther King Jr. Day.
                 </p>
             </StickyBanner>
                 {/* Main Content */}

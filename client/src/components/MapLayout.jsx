@@ -155,10 +155,14 @@ export default function MapLayout({ className = "", makers = [], stations = [] }
 
   return (
     <div className="relative w-full h-full flex flex-col px-6 min-h-0">
-      <div className="flex gap-2">
-        <Map className="w-6 h-6 text-accent" />
-        <h1 className="text-xl font-semibold mb-3">Station Map</h1>
+    <div className="flex flex-col">
+      <div className="flex gap-2 mb-2">
+        <Map className="w-6 h-6 text-[#A100FF]" />
+        <h1 className="text-xl font-semibold">Station Map</h1>
       </div>
+      {/* Accent underline */}
+      <div className="w-38 h-1 bg-[#A100FF] rounded-full mb-3"></div>
+    </div>
       <svg
         viewBox="45 45 660 340"
         preserveAspectRatio="xMidYMin meet"
