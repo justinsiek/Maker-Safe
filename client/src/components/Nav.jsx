@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import React from 'react';
 import logo from '@/assets/logo.png'
+import makersafe from '@/assets/makersafe.png'
 
 export default function Nav({ handleLogout = null, handleReset = null }) {
     const navigate = useNavigate();
@@ -21,6 +22,7 @@ export default function Nav({ handleLogout = null, handleReset = null }) {
             handleLogout();
         } else {
             localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('username');
             navigate('/login');
         }
     };
@@ -60,7 +62,7 @@ export default function Nav({ handleLogout = null, handleReset = null }) {
                 onClick={handleLogoClick}
             >
                 <img src={logo} alt="MakerSafe Logo" className="w-18" />
-                <p className="text-2xl font-black">MAKER<span className="text-[#A100FF]">SAFE</span></p>
+                <img src={makersafe} alt="MakerSafe" className="w-40 my-[-50px] ml-[-15px]" />
             </div>
             <div className="flex gap-2">
                 {/* Show Reset button when logged in */}

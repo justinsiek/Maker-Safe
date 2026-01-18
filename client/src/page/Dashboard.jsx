@@ -381,11 +381,16 @@ export default function Dashboard() {
         <div className="flex flex-col h-screen w-screen overflow-hidden bg-bg">
             {/* Navbar */}
             <Nav handleReset={handleReset} handleLogout={handleLogout} />
-            <StickyBanner className="bg-gradient-to-r from-[#A100FF] to-[#8B00E6]">
-                <p className="text-white">
-                    Makerspace will be closed on January 19th in observance of Martin Luther King Jr. Day.
-                </p>
-            </StickyBanner>
+            <div className="fixed top-[60px] left-0 right-0 z-50">
+                <StickyBanner className="bg-gradient-to-r from-[#A100FF] to-[#8B00E6]">
+                    <p className="text-white">
+                        Makerspace will be closed on January 19th in observance of Martin Luther King Jr. Day.
+                    </p>
+                </StickyBanner>
+            </div>
+            <h1 className="text-2xl font-bold text-black ml-6 mt-3">Welcome, {localStorage.getItem('username')}!</h1>
+
+
             {/* Main Content */}
             <div className="flex overflow-hidden justify-evenly w-full">
                 <div className="flex flex-col w-[55%] h-full">
