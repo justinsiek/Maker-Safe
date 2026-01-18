@@ -406,7 +406,7 @@ export default function Dashboard() {
                     <Violations violations={violations} />
                 </div>
             </div>
-            <footer className="py-16 text-center text-[#6F6F6F] bg-white">
+            <footer className="py-4 text-center text-[#6F6F6F] bg-white">
                 <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-[#c7c6c6]">MakerSafe // 2026</p>
             </footer>
         </div>
