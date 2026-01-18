@@ -166,8 +166,8 @@ const handleLogout = async () => {
 
       {/* --- Footer --- */}
       <footer className="py-16 text-center text-[#6F6F6F] bg-white">
-        <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-[#E6E6E6]">MakerSafe // 2026</p>
-      </footer>
+          <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-[#c7c6c6]">MakerSafe // 2026</p>
+        </footer>
     </div>
   );
 }

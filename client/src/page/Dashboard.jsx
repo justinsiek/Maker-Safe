@@ -375,23 +375,26 @@ export default function Dashboard() {
         <div className="flex flex-col h-screen w-screen overflow-hidden bg-bg">
             {/* Navbar */}
             <Nav handleReset={handleReset} handleLogout={handleLogout} />
-            <StickyBanner className="bg-accent">
+            <StickyBanner className="bg-gradient-to-r from-[#A100FF] to-[#8B00E6]">
                 <p className="text-white">
                     Makerspace will be closed on January 19th in observance of Martin Luther King Jr. Day.
                 </p>
             </StickyBanner>
-                {/* Main Content */}
-                <div className="flex overflow-hidden justify-evenly w-full">
-                    <div className="flex flex-col w-[55%] h-full">
-                        <Makers makers={makers} />
-                        <MapComponent makers={makers} stations={stations} />
-                    </div>
-                    <div className="flex flex-col bg-white w-[40%] overflow-y-auto scrollbar-hide h-[90]">
-                        <Clock />
-                        <LiveAlert />
-                        <Violations violations={violations} />
-                    </div>
+            {/* Main Content */}
+            <div className="flex overflow-hidden justify-evenly w-full">
+                <div className="flex flex-col w-[55%] h-full">
+                    <Makers makers={makers} />
+                    <MapComponent makers={makers} stations={stations} />
                 </div>
+                <div className="flex flex-col bg-white w-[40%] overflow-y-auto scrollbar-hide h-[90]">
+                    <Clock />
+                    <LiveAlert />
+                    <Violations violations={violations} />
+                </div>
+            </div>
+            <footer className="py-16 text-center text-[#6F6F6F] bg-white">
+                <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-[#c7c6c6]">MakerSafe // 2026</p>
+            </footer>
         </div>
     )
 }
