@@ -128,8 +128,7 @@ def create_violation():
         # 7. Schedule status reset after 15 seconds
         def reset_maker_status():
             try:
-                # Reset maker status back to 'active'
-                # Check if maker is still at the station
+                # Check if maker is still at the station, if no clear maker status and clear station status
                 maker_status_response = supabase.table('maker_status').select('*').eq('maker_id', maker_id).execute()
                 if not maker_status_response.data or len(maker_status_response.data) == 0:
                     return jsonify({"error": "Maker not found"}), 404

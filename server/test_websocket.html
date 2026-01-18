@@ -144,15 +144,18 @@
     </div>
     
     <div class="test-section">
-        <h3>1. Test Login (simulates Pi login camera detecting a maker)</h3>
+        <h3>1. Test Toggle (simulates Pi login camera detecting a maker)</h3>
         <input type="text" id="labelInput" placeholder="External label (e.g., 6767)" value="67">
-        <button onclick="testLogin()">Send Login Request</button>
+        <button onclick="testToggle()">Send Toggle Request</button>
+        <p style="color: #888; font-size: 12px; margin-top: 10px;">
+            First call = Check IN | Second call (after 30s) = Check OUT
+        </p>
     </div>
 
     <div class="test-section">
         <h3>2. Test Station Enter (simulates Pi station camera detecting a maker)</h3>
         <input type="text" id="stationLabelInput" placeholder="External label (e.g., 6767)" value="67">
-        <input type="text" id="stationIdInput" placeholder="Station UUID" value="723740fc-d4d8-4990-998c-5660d3e19898">
+        <input type="text" id="stationIdInput" placeholder="Station UUID" value="ed98c79b-5809-470d-8ac6-e99617eaa2ca">
         <button onclick="testStationEnter()">Send Station Enter</button>
         <p style="color: #888; font-size: 12px; margin-top: 10px;">
             Note: You need a valid station UUID from your database. 
@@ -162,13 +165,13 @@
 
     <div class="test-section">
         <h3>3. Test Station Leave (simulates maker leaving a station)</h3>
-        <input type="text" id="leaveStationIdInput" placeholder="Station UUID" value="723740fc-d4d8-4990-998c-5660d3e19898">
+        <input type="text" id="leaveStationIdInput" placeholder="Station UUID" value="ed98c79b-5809-470d-8ac6-e99617eaa2ca">
         <button onclick="testStationLeave()">Send Station Leave</button>
     </div>
 
     <div class="test-section" style="border-left: 4px solid #dc3545;">
         <h3 style="color: #dc3545;">4. Test Violation (simulates safety violation detected)</h3>
-        <input type="text" id="violationStationIdInput" placeholder="Station UUID" value="723740fc-d4d8-4990-998c-5660d3e19898">
+        <input type="text" id="violationStationIdInput" placeholder="Station UUID" value="ed98c79b-5809-470d-8ac6-e99617eaa2ca">
         <input type="text" id="violationTypeInput" placeholder="Violation type" value="GOGGLES_NOT_WORN">
         <button onclick="testViolation()" style="background: #dc3545;">Create Violation</button>
         <p style="color: #888; font-size: 12px; margin-top: 10px;">
@@ -178,7 +181,7 @@
 
     <div class="test-section" style="border-left: 4px solid #28a745;">
         <h3 style="color: #28a745;">5. Test Resolve Violation (simulates safety issue corrected)</h3>
-        <input type="text" id="resolveStationIdInput" placeholder="Station UUID" value="723740fc-d4d8-4990-998c-5660d3e19898">
+        <input type="text" id="resolveStationIdInput" placeholder="Station UUID" value="ed98c79b-5809-470d-8ac6-e99617eaa2ca">
         <button onclick="testResolveViolation()" style="background: #28a745;">Resolve Violation</button>
     </div>
     
@@ -282,6 +285,12 @@
             fetchState(); // Refresh state
         });
 
+        // Listen for maker check-out events
+        socket.on('maker_checked_out', (data) => {
+            logEvent('maker_checked_out', data);
+            fetchState(); // Refresh state
+        });
+
         // Listen for station entered events
         socket.on('station_entered', (data) => {
             logEvent('station_entered', data);
@@ -306,8 +315,8 @@
             fetchState(); // Refresh state
         });
 
-        // Test function to simulate Pi sending login request
-        async function testLogin() {
+        // Test function to simulate Pi sending toggle request
+        async function testToggle() {
             const label = document.getElementById('labelInput').value;
             if (!label) {
                 alert('Please enter an external label');
@@ -315,13 +324,13 @@
             }
 
             try {
-                const response = await fetch('http://localhost:8080/login/', {
+                const response = await fetch('http://localhost:8080/login/toggle', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ external_label: label })
                 });
                 const data = await response.json();
-                logEvent('HTTP Response (POST /login/)', data);
+                logEvent('HTTP Response (POST /login/toggle)', data);
             } catch (error) {
                 logEvent('HTTP Error', { error: error.message });
             }
