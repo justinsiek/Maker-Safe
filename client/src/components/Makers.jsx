@@ -29,10 +29,9 @@ export default function Makers({ makers = [] }) {
   };
 
   return (
-    <div className="flex items-center px-6 shrink-0 h-[22%] border border-gray-600 my-4 rounded-lg">
-      <div className="w-full">
+    <div className="flex flex-col px-6 shrink-0 h-1/4 border border-gray-600 my-4 rounded-lg py-4">
         <h1 className="text-xl font-semibold mb-3">Active Makers</h1>
-        <div className="flex w-full justify-evenly overflow-x-auto overflow-y-hidden">
+        <div className="flex w-full gap-4 overflow-x-auto overflow-y-hidden">
           {makers.length === 0 ? (
             <p className="text-neutral-500">No makers checked in</p>
           ) : (
@@ -63,7 +62,6 @@ export default function Makers({ makers = [] }) {
               </div>
             ))
           )}
-        </div>
       </div>
 
     </div>
