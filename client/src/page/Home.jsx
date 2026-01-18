@@ -84,7 +84,7 @@ const handleLogout = async () => {
       <header className="relative z-10 max-w-7xl mx-auto px-8 pt-12 pb-24 grid lg:grid-cols-2 gap-20 items-center">
         <div className="space-y-8">
             {/* <h1 className="text-6xl lg:text-6xl font-[900] leading-[1.05] tracking-tight">Safety for the next generation of <span className="text-[#A100FF]">Makers.</span></h1> */}
-            <TextAnimate animation="fadeIn" as="h1" className="text-6xl">Safety for the next generation of Makers.</TextAnimate>
+            <TextAnimate animation="fadeIn" as="h1" className="text-6xl font-bold">Safety for the next generation of Makers.</TextAnimate>
             <p className="text-lg text-[#6F6F6F] max-w-md font-light">Real-time computer vision for school workshops. Monitor PPE compliance and station availability with one simple system.</p>
             <button onClick={() => handleNavigateToDashboard()} className="bg-[#A100FF] text-white px-8 py-4 rounded-xl shadow-xl shadow-[#A100FF]/25 hover:scale-105 transition-transform">Launch Dashboard</button>
         </div>
