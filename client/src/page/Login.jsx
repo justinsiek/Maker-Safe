@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import logo from "@/assets/logo.PNG" // Imported your custom logo
 import { 
   ShieldAlert, 
   ChevronRight, 
   Lock, 
   User, 
   Info, 
-  Bot,
   ArrowLeft,
   // Hardware/Safety Icons
   Cpu, 
@@ -37,7 +37,7 @@ export default function Login() {
     e.preventDefault()
     setError('')
 
-    if (username == 'SlugSpace' && password == 'password') {
+    if (username === 'SlugSpace' && password === 'password') {
       localStorage.setItem('isLoggedIn', 'true')
       navigate('/dashboard')
     } else {
@@ -65,13 +65,17 @@ export default function Login() {
         <div className="w-full lg:w-[45%] flex flex-col justify-center px-8 lg:px-20 py-12 relative bg-white z-10">
           
           <div className="max-w-md w-full mx-auto">
-            {/* Logo */}
+            {/* Custom Logo Button */}
             <button 
               onClick={() => navigate('/')}
-              className="flex items-center gap-2 mb-12 hover:opacity-80 transition-opacity cursor-pointer group"
+              className="flex items-center mb-5 hover:opacity-80 transition-opacity cursor-pointer group "
             >
-              <div className="bg-[#A100FF] p-1.5 rounded-lg shadow-lg shadow-[#A100FF]/20 group-hover:scale-110 transition-transform">
-                <Bot className="w-5 h-5 text-white" />
+                <div className="group-hover:scale-110 transition-transform flex items-center justify-center">
+                  <img 
+                  src={logo} 
+                  alt="MakerSafe Logo" 
+                  className="w-12 h-12 object-contain"
+                />
               </div>
               <span className="text-xl font-black tracking-tighter uppercase">
                 Maker<span className="text-[#A100FF]">Safe</span>
@@ -178,46 +182,36 @@ export default function Login() {
         {/* RIGHT SIDE: Brand Gradient & Icon Cloud */}
         <div className="hidden lg:flex lg:w-[55%] bg-gradient-to-br from-[#A100FF] via-[#8B00E6] to-[#7000B2] relative items-center justify-center p-20 overflow-hidden">
           
-          {/* Decorative Background Elements */}
           <div className="absolute top-[10%] left-[10%] w-32 h-32 rounded-full border-4 border-white/10"></div>
           <div className="absolute bottom-[10%] right-[10%] w-64 h-64 rounded-[3rem] border-4 border-white/5 rotate-12"></div>
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-white/5 rounded-full blur-3xl"></div>
 
           {/* Floating Icon Cloud */}
           <div className="absolute inset-0 z-0">
-            {/* Top Left Cluster */}
             <div className="absolute top-[15%] left-[15%] animate-bounce [animation-duration:3s]">
               <Camera className="w-10 h-10 text-white/20 -rotate-12" />
             </div>
             <div className="absolute top-[25%] left-[30%] animate-pulse">
               <Eye className="w-6 h-6 text-white/40" />
             </div>
-
-            {/* Top Right Cluster */}
             <div className="absolute top-[20%] right-[20%] animate-pulse [animation-delay:1s]">
               <Cpu className="w-12 h-12 text-white/30 rotate-12" />
             </div>
             <div className="absolute top-[35%] right-[25%]">
               <Zap className="w-8 h-8 text-white/20 -rotate-45" />
             </div>
-
-            {/* Middle Section (Spread out since big icon is gone) */}
             <div className="absolute top-1/2 left-[15%] -translate-y-1/2 animate-pulse">
               <Radio className="w-9 h-9 text-white/25" />
             </div>
             <div className="absolute top-1/2 right-[15%] -translate-y-1/2 animate-bounce [animation-duration:5s]">
               <Network className="w-10 h-10 text-white/20" />
             </div>
-
-            {/* Bottom Left Cluster */}
             <div className="absolute bottom-[20%] left-[20%] animate-bounce [animation-duration:4s]">
               <Database className="w-10 h-10 text-white/20" />
             </div>
             <div className="absolute bottom-[35%] left-[25%] opacity-40">
               <ShieldAlert className="w-8 h-8 text-white/30" />
             </div>
-
-            {/* Bottom Right Cluster */}
             <div className="absolute bottom-[15%] right-[20%] animate-pulse [animation-delay:0.5s]">
               <Activity className="w-14 h-14 text-white/20" />
             </div>
@@ -226,7 +220,6 @@ export default function Login() {
             </div>
           </div>
 
-          {/* Optional: Subtle branding in the corner of the gradient area */}
           <div className="absolute bottom-12 right-12 text-right">
              <p className="text-white/20 text-xs font-bold uppercase tracking-tighter">Powered by Viam</p>
           </div>
