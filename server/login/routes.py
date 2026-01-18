@@ -11,9 +11,10 @@ login_bp = Blueprint('login', __name__, url_prefix='/login')
 # SocketIO instance (set by server.py)
 _socketio = None
 
-# Cooldown tracking - stores the last login time for each maker
-_login_cooldowns = {}
-LEAVE_COOLDOWN_SECONDS = 10
+# Cooldown tracking - stores the last action time for each maker
+_login_cooldowns = {}  # Tracks login time (prevents immediate leave)
+_leave_cooldowns = {}  # Tracks leave time (prevents immediate login)
+COOLDOWN_SECONDS = 10
 
 def set_socketio(socketio):
     """Set the SocketIO instance for emitting events."""
@@ -78,6 +79,17 @@ def toggle():
             # STEP 4A: Maker is NOT checked in → LOGIN (check them in)
             # ============================================================
             
+            # Check if login is on cooldown (after recent leave)
+            if maker_id in _leave_cooldowns:
+                elapsed = time.time() - _leave_cooldowns[maker_id]
+                if elapsed < COOLDOWN_SECONDS:
+                    remaining = int(COOLDOWN_SECONDS - elapsed)
+                    return jsonify({
+                        "error": f"Login is on cooldown. Please wait {remaining} more seconds.",
+                        "cooldown_remaining": remaining,
+                        "action": "cooldown"
+                    }), 429  # 429 = Too Many Requests
+            
             # Create maker_status record with 'idle' status
             supabase.table('maker_status').upsert({
                 'maker_id': maker_id,
@@ -97,6 +109,10 @@ def toggle():
             # Record login time for cooldown tracking (prevents immediate leave)
             _login_cooldowns[maker_id] = time.time()
             
+            # Clear leave cooldown since they successfully logged in
+            if maker_id in _leave_cooldowns:
+                del _leave_cooldowns[maker_id]
+            
             # Broadcast to all connected WebSocket clients
             if _socketio:
                 _socketio.emit('maker_checked_in', maker_data)
@@ -114,11 +130,11 @@ def toggle():
             # STEP 4B: Maker IS checked in → LEAVE (check them out)
             # ============================================================
             
-            # Check if leave is on cooldown (30 seconds after login)
+            # Check if leave is on cooldown (after recent login)
             if maker_id in _login_cooldowns:
                 elapsed = time.time() - _login_cooldowns[maker_id]
-                if elapsed < LEAVE_COOLDOWN_SECONDS:
-                    remaining = int(LEAVE_COOLDOWN_SECONDS - elapsed)
+                if elapsed < COOLDOWN_SECONDS:
+                    remaining = int(COOLDOWN_SECONDS - elapsed)
                     return jsonify({
                         "error": f"Leave is on cooldown. Please wait {remaining} more seconds.",
                         "cooldown_remaining": remaining,
@@ -128,9 +144,12 @@ def toggle():
             # Delete the maker_status record (check them out)
             supabase.table('maker_status').delete().eq('maker_id', maker_id).execute()
             
-            # Clear the cooldown after successful leave
+            # Clear the login cooldown after successful leave
             if maker_id in _login_cooldowns:
                 del _login_cooldowns[maker_id]
+            
+            # Record leave time for cooldown tracking (prevents immediate login)
+            _leave_cooldowns[maker_id] = time.time()
             
             # Prepare maker data for response and WebSocket broadcast
             maker_data = {
