@@ -41,7 +41,7 @@ export default function MapLayout({ className = "", makers = [], stations = [] }
       },
       {
         id: "goon-station",
-        name: "goon station",
+        name: "Research Lab",
         path: "M 200 50 L 420 50 L 420 160 L 200 160 Z",
         centerX: 310,
         centerY: 105,
@@ -51,7 +51,7 @@ export default function MapLayout({ className = "", makers = [], stations = [] }
       },
       {
         id: "electronics",
-        name: "Electronics",
+        name: "Assembly Lab",
         path: "M 420 50 L 580 50 L 580 220 L 470 220 L 420 160 Z",
         centerX: 500,
         centerY: 125,

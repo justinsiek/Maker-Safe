@@ -3,9 +3,53 @@ import {
   Sparkles, Bot, Camera, LayoutGrid, ChevronRight, Zap, 
   CheckCircle2, AlertCircle, Cpu, HardDrive, Share2, ArrowRight
 } from 'lucide-react';
-
+import { Safari } from "@/components/ui/safari.jsx"
+import assets from "@/assets/assets.png"
+import Nav from '@/components/Nav.jsx'
 export default function Home() {
   const navigate = useNavigate();
+
+  const handleNavigateToDashboard = () => {
+    if (localStorage.getItem('isLoggedIn')) {
+      navigate('/dashboard')
+    } else {
+      navigate('/login')
+    }
+  }
+  
+  const handleReset = async () => {
+    try {
+        const response = await fetch('http://localhost:8080/logout', {
+            method: 'POST'
+        })
+        
+        const data = await response.json()
+        
+        if (data.success) {
+            console.log('System reset successful:', data.message)
+            setMakers([])
+            setStations([])
+            setViolations([])
+            
+            if (socket) {
+                socket.disconnect()
+            }
+            localStorage.removeItem('isLoggedIn')
+            navigate('/')
+        } else {
+            console.error('Logout failed:', data.error)
+            alert('Failed to reset system: ' + (data.error || 'Unknown error'))
+        }
+    } catch (error) {
+        console.error('Error calling logout:', error)
+        alert('Failed to connect to server')
+    }
+}
+
+const handleLogout = async () => {
+    localStorage.removeItem('isLoggedIn')
+    navigate('/')
+}
 
   return (
     <div className="min-h-screen bg-white text-black font-['Inter',sans-serif] selection:bg-[#A100FF] selection:text-white relative overflow-hidden">
@@ -14,13 +58,7 @@ export default function Home() {
       </style>
 
       {/* --- Existing Navigation & Hero (Condensed for brevity) --- */}
-      <nav className="relative z-10 flex items-center justify-between px-8 py-8 max-w-7xl mx-auto">
-        <div className="flex items-center gap-3">
-          <div className="bg-[#A100FF] p-2 rounded-xl"><Bot className="w-6 h-6 text-white" /></div>
-          <span className="text-2xl font-black tracking-tight uppercase">Maker<span className="text-[#A100FF]">Safe</span></span>
-        </div>
-        <button onClick={() => navigate('/login')} className="px-5 py-2.5 bg-[#F5F5F5] border border-[#E6E6E6] rounded-lg font-semibold text-sm hover:border-[#A100FF]">Log in</button>
-      </nav>
+      <Nav />
 
             {/* --- Announcement Banner --- */}
       <div className="bg-[#A100FF] text-white py-3 px-4 text-center">
@@ -45,9 +83,9 @@ export default function Home() {
         <div className="space-y-8">
             <h1 className="text-6xl lg:text-6xl font-[900] leading-[1.05] tracking-tight">Safety for the next generation of <span className="text-[#A100FF]">Makers.</span></h1>
             <p className="text-lg text-[#6F6F6F] max-w-md font-medium">Real-time computer vision for school workshops. Monitor PPE compliance and station availability with one simple system.</p>
-            <button onClick={() => navigate('/login')} className="bg-[#A100FF] text-white px-8 py-4 rounded-xl font-bold shadow-xl shadow-[#A100FF]/25 hover:scale-105 transition-transform">Launch Dashboard</button>
+            <button onClick={() => handleNavigateToDashboard()} className="bg-[#A100FF] text-white px-8 py-4 rounded-xl font-bold shadow-xl shadow-[#A100FF]/25 hover:scale-105 transition-transform">Launch Dashboard</button>
         </div>
-        <div className="bg-[#1A1A1A] rounded-[2.5rem] p-4 border-[8px] border-[#F5F5F5] shadow-2xl h-80 flex items-center justify-center text-white/20 uppercase font-black italic">Dashboard Preview</div>
+        <Safari url="https://www.makersafe.io" imageSrc={assets} mode="default" />
       </header>
 
       {/* --- NEW: HOW IT WORKS SECTION --- */}

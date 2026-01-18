@@ -7,6 +7,7 @@ import MapComponent from '../components/MapComponent.jsx'
 import LiveAlert from '../components/LiveAlert.jsx'
 import { StickyBanner } from "@/components/ui/sticky-banner";
 import Clock from '@/components/Clock.jsx'
+import Nav from '@/components/Nav.jsx'
 
 export default function Dashboard() {
     const navigate = useNavigate()
@@ -336,7 +337,7 @@ export default function Dashboard() {
     }, [])
 
     // Add this function inside Dashboard component (before the return statement)
-    const handleLogout = async () => {
+    const handleReset = async () => {
         try {
             const response = await fetch('http://localhost:8080/logout', {
                 method: 'POST'
@@ -353,7 +354,7 @@ export default function Dashboard() {
                 if (socket) {
                     socket.disconnect()
                 }
-                
+                localStorage.removeItem('isLoggedIn')
                 navigate('/')
             } else {
                 console.error('Logout failed:', data.error)
@@ -365,18 +366,15 @@ export default function Dashboard() {
         }
     }
 
+    const handleLogout = async () => {
+        localStorage.removeItem('isLoggedIn')
+        navigate('/')
+    }
+
     return (
         <div className="flex flex-col h-screen w-screen overflow-hidden bg-bg">
             {/* Navbar */}
-            <nav className="flex items-center justify-between px-6 py-2 bg-white border-b border-gray-200">
-                <span className="text-lg font-semibold">Maker<span className="text-accent">Safe</span></span>
-                <button 
-                    onClick={handleLogout}
-                    className="text-black px-4 py-2 rounded-lg text-sm font-medium cursor-pointer hover:bg-gray-100 transition-colors"
-                >
-                    Log Out
-                </button>
-            </nav>
+            <Nav handleReset={handleReset} handleLogout={handleLogout} />
             <StickyBanner className="bg-accent">
                 <p className="text-white">
                     Makerspace will be closed for maintenance on January 19th to observe Martin Luther King Jr. Day.

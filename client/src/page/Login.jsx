@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 export default function Login() {
@@ -7,11 +7,18 @@ export default function Login() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
+  useEffect(() => {
+    if (localStorage.getItem('isLoggedIn')) {
+      navigate('/dashboard')
+    }
+  }, [])
+
   const handleSubmit = (e) => {
     e.preventDefault()
     setError('')
 
     if (username === 'SlugSpace' && password === 'password') {
+      localStorage.setItem('isLoggedIn', true)
       navigate('/dashboard')
     } else {
       setError('Invalid username or password')
