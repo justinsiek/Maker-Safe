@@ -58,6 +58,15 @@ def station_enter():
         maker = maker_response.data[0]
         maker_id = maker['id']
         
+        # Search for maker status by searching for maker id using viam external label. If maker status is not found, user should not be allowed to enter the station.
+        maker_status_response = supabase.table('maker_status').select('*').eq('maker_id', maker_id).execute()
+        if not maker_status_response.data or len(maker_status_response.data) == 0:
+            return jsonify({"error": f"Maker with label '{external_label}' is not checked in"}), 404
+        
+        maker_status = maker_status_response.data[0]
+        if maker_status.get('status') != 'active':
+            return jsonify({"error": f"Maker with label '{external_label}' is not checked in"}), 404
+        
         # Look up the station
         station_response = supabase.table('stations').select('*').eq('id', station_id).execute()
         
