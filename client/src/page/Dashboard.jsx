@@ -15,6 +15,12 @@ export default function Dashboard() {
     const [stations, setStations] = useState([])
     const [violations, setViolations] = useState([])
     const [socket, setSocket] = useState(null)
+    const isLoggedIn = localStorage.getItem('isLoggedIn')
+
+    // If not logged in, redirect to login page
+    if (!isLoggedIn) {
+        navigate('/login')
+    }
 
     // Helper function to get initials from name
     const getInitials = (name) => {

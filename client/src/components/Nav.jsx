@@ -60,7 +60,7 @@ export default function Nav({ handleLogout = null, handleReset = null }) {
                 onClick={handleLogoClick}
             >
                 <img src={logo} alt="MakerSafe Logo" className="w-18" />
-                <p className="text-2xl font-bold">Maker<span className="text-[#A100FF]">Safe</span></p>
+                <p className="text-2xl font-black">MAKER<span className="text-[#A100FF]">SAFE</span></p>
             </div>
             <div className="flex gap-2">
                 {/* Show Reset button when logged in */}
