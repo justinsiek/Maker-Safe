@@ -2,6 +2,7 @@ from config import create_app, supabase
 from login.routes import login_bp, set_socketio as set_login_socketio
 from station.routes import station_bp, set_socketio as set_station_socketio
 from violation.routes import violation_bp, set_socketio as set_violation_socketio
+from logout.routes import logout_bp, set_socketio as set_logout_socketio
 import os
 from flask import jsonify
 from flask_socketio import SocketIO
@@ -15,10 +16,12 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 set_login_socketio(socketio)
 set_station_socketio(socketio)
 set_violation_socketio(socketio)
+set_logout_socketio(socketio)
 
 app.register_blueprint(login_bp)
 app.register_blueprint(station_bp)
 app.register_blueprint(violation_bp)
+app.register_blueprint(logout_bp)
 
 @app.route('/')
 def index():
@@ -64,7 +67,7 @@ def get_state():
             stations.append({
                 "id": ss['station_id'],
                 "name": station_info.get('name'),
-                "status": ss['status'],
+                
                 "active_maker_id": ss.get('active_maker_id'),
                 "updated_at": ss['updated_at']
             })

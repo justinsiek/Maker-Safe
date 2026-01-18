@@ -46,7 +46,7 @@ create table if not exists public.maker_status (
 -- -------------------------------------------------------------------
 create table if not exists public.station_status (
   station_id uuid primary key references public.stations(id) on delete cascade,
-  status text not null,                     -- 'idle' | 'in_use' | 'violation'
+  in_use bool not null,
   active_maker_id uuid null references public.makers(id) on delete set null,
   updated_at timestamptz not null default now(),
   constraint station_status_status_check check (status in ('idle', 'in_use', 'violation'))

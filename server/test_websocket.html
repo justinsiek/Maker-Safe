@@ -162,7 +162,6 @@
 
     <div class="test-section">
         <h3>3. Test Station Leave (simulates maker leaving a station)</h3>
-        <input type="text" id="leaveLabelInput" placeholder="External label (e.g., 6767)" value="67">
         <input type="text" id="leaveStationIdInput" placeholder="Station UUID" value="723740fc-d4d8-4990-998c-5660d3e19898">
         <button onclick="testStationLeave()">Send Station Leave</button>
     </div>
@@ -357,13 +356,8 @@
 
         // Test function to simulate maker leaving a station
         async function testStationLeave() {
-            const label = document.getElementById('leaveLabelInput').value;
             const stationId = document.getElementById('leaveStationIdInput').value;
-            
-            if (!label) {
-                alert('Please enter an external label');
-                return;
-            }
+            console.log('Station ID:', stationId);
             if (!stationId) {
                 alert('Please enter a station UUID');
                 return;
@@ -373,7 +367,7 @@
                 const response = await fetch('http://localhost:8080/station/leave', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ external_label: label, station_id: stationId })
+                    body: JSON.stringify({ station_id: stationId })
                 });
                 const data = await response.json();
                 logEvent('HTTP Response (POST /station/leave)', data);
@@ -397,7 +391,7 @@
             }
 
             try {
-                const response = await fetch('http://localhost:8080/violation/', {
+                const response = await fetch('http://localhost:8080/violation/create', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 

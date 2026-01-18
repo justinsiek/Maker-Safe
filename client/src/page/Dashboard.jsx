@@ -5,6 +5,7 @@ import Makers from '../components/Makers.jsx'
 import Violations from '../components/Violation.jsx'
 import MapComponent from '../components/MapComponent.jsx'
 import LiveAlert from '../components/LiveAlert.jsx'
+import { StickyBanner } from "@/components/ui/sticky-banner";
 
 export default function Dashboard() {
     const navigate = useNavigate()
@@ -375,18 +376,22 @@ export default function Dashboard() {
                     Log Out
                 </button>
             </nav>
-            
-            {/* Main Content */}
-            <div className="flex overflow-hidden">
-                <div className="flex flex-col w-[60%] h-full px-6">
-                    <Makers makers={makers} />
-                    <MapComponent makers={makers} stations={stations} />
+            <StickyBanner className="bg-gradient-to-b from-blue-500 to-blue-600">
+                <p>
+                    Makerspace will be closed for maintenance on January 19th to observe Martin Luther King Jr. Day.
+                </p>
+            </StickyBanner>
+                {/* Main Content */}
+                <div className="flex overflow-hidden">
+                    <div className="flex flex-col w-[60%] h-full px-6">
+                        <Makers makers={makers} />
+                        <MapComponent makers={makers} stations={stations} />
+                    </div>
+                    <div className="flex flex-col bg-white w-[40%] overflow-y-auto scrollbar-hide h-[90%]">
+                        <LiveAlert />
+                        <Violations violations={violations} />
+                    </div>
                 </div>
-                <div className="flex flex-col bg-white w-[40%] overflow-y-auto scrollbar-hide h-[90%]">
-                    <LiveAlert />
-                    <Violations violations={violations} />
-                </div>
-            </div>
         </div>
     )
 }
