@@ -4,7 +4,7 @@ export default function Makers({ makers = [] }) {
     switch(status) {
       case "active":
       case "on duty":
-        return "bg-blue-500";
+        return "bg-accent";
       case "idle":
         return "bg-gray-400";
       case "violation":
@@ -29,7 +29,7 @@ export default function Makers({ makers = [] }) {
   };
 
   return (
-    <div className="flex flex-col px-6 shrink-0 h-1/4 border border-gray-600 my-4 rounded-lg py-4">
+    <div className="flex flex-col px-6 shrink-0 h-1/4 my-4 rounded-lg py-4 bg-surface">
         <h1 className="text-xl font-semibold mb-3">Active Makers</h1>
         <div className="flex w-full gap-4 overflow-x-auto overflow-y-hidden">
           {makers.length === 0 ? (
@@ -38,10 +38,10 @@ export default function Makers({ makers = [] }) {
             makers.map((maker) => (
               <div 
                 key={maker.id}
-                className={`h-24 py-3 px-10 flex flex-row items-center gap-4 rounded-xl border-2 flex-shrink-0 ${getCardStyles(maker.status)}`}
+                className={`h-full py-3 px-10 flex flex-row items-center gap-4 rounded-xl border-2 shrink-0 ${getCardStyles(maker.status)}`}
               >
                 {/* Avatar */}
-                <div className={`${getStatusColor(maker.status)} w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold text-base flex-shrink-0`}>
+                <div className={`${getStatusColor(maker.status)} w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold text-base shrink-0`}>
                   {maker.initials}
                 </div>
                 

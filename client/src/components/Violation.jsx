@@ -9,7 +9,7 @@ import {
 export default function Violations({ violations = [] }) {
 
   return (
-    <div className="flex flex-col h-full bg-white border rounded-lg overflow-hidden">
+    <div className="flex flex-col h-[45%] rounded-lg overflow-hidden my-4 bg-surface relative">
         <h1 className="text-xl font-semibold py-3 px-4">Violations</h1>
       
       <div className="flex-1 overflow-y-auto scrollbar-hide px-8 pb-8">
@@ -88,6 +88,9 @@ export default function Violations({ violations = [] }) {
           ))}
         </Accordion>
       </div>
+      
+      {/* Fade overlay at bottom */}
+      <div className="absolute bottom-0 left-0 right-0 h-16 bg-linear-to-t from-white to-transparent pointer-events-none"></div>
     </div>
   );
 }

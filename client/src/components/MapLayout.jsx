@@ -125,12 +125,12 @@ export default function MapLayout({ className = "", makers = [], stations = [] }
     if (selectedSection === section.id) return "#93c5fd"
     if (hoveredSection === section.id) return "#bfdbfe"
     
-    // Pastel colors based on status for stations
+    // Accent color for occupied stations, red for violations
     if (section.status === 'violation') {
       return "#fecaca" // Pastel red
     }
     if (section.status === 'in_use' || section.assignedMaker) {
-      return "#fef08a" // Pastel yellow
+      return "#A100FF"
     }
     return "#bbf7d0" // Pastel green
   }
@@ -148,13 +148,13 @@ export default function MapLayout({ className = "", makers = [], stations = [] }
 
   const getStatusColor = (section) => {
     if (section.status === 'violation') return "#dc2626"
-    if (section.status === 'in_use' || section.assignedMaker) return "#ca8a04"
+    if (section.status === 'in_use' || section.assignedMaker) return "#ffffff" // White text for occupied
     return "#16a34a"
   }
 
   return (
-    <div className="relative w-full h-full flex flex-col px-4 min-h-0">
-      <h1 className="text-2xl font-light mx-4 mb-2 flex-shrink-0">Stations</h1>
+    <div className="relative w-full h-full flex flex-col px-2 min-h-0">
+      <h1 className="text-xl font-semibold mb-3 px-4">Station Map</h1>
       <svg
         viewBox="45 45 660 340"
         preserveAspectRatio="xMidYMin meet"
@@ -187,7 +187,7 @@ export default function MapLayout({ className = "", makers = [], stations = [] }
               d={section.path}
               fill={getSectionFill(section)}
               fillOpacity={getSectionOpacity(section)}
-              stroke="#1a1a1a"
+              stroke="#9ca3af"
               strokeWidth="2.5"
               className={section.isStation ? "cursor-pointer transition-all duration-200" : ""}
               onMouseEnter={() => section.isStation && setHoveredSection(section.id)}
@@ -201,9 +201,15 @@ export default function MapLayout({ className = "", makers = [], stations = [] }
                 x={section.centerX}
                 y={section.isStation ? section.centerY - 12 : section.centerY + 4}
                 textAnchor="middle"
-                fontSize={section.isUtility ? "11" : "12"}
-                fontWeight="600"
-                fill={section.isUtility ? "#737373" : "#1a1a1a"}
+                fontSize={section.isUtility ? "11" : "13"}
+                fontWeight="500"
+                fill={
+                  section.isUtility 
+                    ? "#737373" 
+                    : (section.status === 'in_use' || section.assignedMaker) 
+                      ? "#ffffff" 
+                      : "#1a1a1a"
+                }
                 pointerEvents="none"
               >
                 {section.name}
@@ -232,7 +238,8 @@ export default function MapLayout({ className = "", makers = [], stations = [] }
                 y={section.centerY + 22}
                 textAnchor="middle"
                 fontSize="10"
-                fill="#525252"
+                fill="#ffffff"
+                fontWeight="400"
                 pointerEvents="none"
               >
                 {section.assignedMaker.name}
@@ -242,11 +249,11 @@ export default function MapLayout({ className = "", makers = [], stations = [] }
         ))}
         
         {/* Additional walls for community area */}
-        <line x1="200" y1="220" x2="200" y2="380" stroke="#1a1a1a" strokeWidth="2.5" />
-        <line x1="200" y1="380" x2="580" y2="380" stroke="#1a1a1a" strokeWidth="2.5" />
-        <line x1="580" y1="220" x2="580" y2="380" stroke="#1a1a1a" strokeWidth="2.5" />
-        <line x1="420" y1="160" x2="470" y2="220" stroke="#1a1a1a" strokeWidth="2.5" />
-        <line x1="470" y1="220" x2="580" y2="220" stroke="#1a1a1a" strokeWidth="2.5" />
+        <line x1="200" y1="220" x2="200" y2="380" stroke="#9ca3af" strokeWidth="2.5" />
+        <line x1="200" y1="380" x2="580" y2="380" stroke="#9ca3af" strokeWidth="2.5" />
+        <line x1="580" y1="220" x2="580" y2="380" stroke="#9ca3af" strokeWidth="2.5" />
+        <line x1="420" y1="160" x2="470" y2="220" stroke="#9ca3af" strokeWidth="2.5" />
+        <line x1="470" y1="220" x2="580" y2="220" stroke="#9ca3af" strokeWidth="2.5" />
         
         {/* Outer boundary */}
         <rect 

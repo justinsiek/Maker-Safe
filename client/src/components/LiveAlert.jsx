@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 export default function SafetyAlerts() {
   const demoAlerts = [
     "Equipment maintenance due for Laser Cutter",
-    "Machine temperature warning at 3D Printer station",
+    // "Machine temperature warning at 3D Printer station",
     "Station offline: Soldering Iron equipment not responding",
   ]
 
@@ -27,7 +27,7 @@ export default function SafetyAlerts() {
   if (alerts.length === 0) return null
 
   return (
-    <div className="flex flex-col h-1/2 border my-4 rounded-lg p-4">
+    <div className="flex flex-col h-1/3  rounded-lg p-4 bg-surface">
       <div className="py-0 shrink-">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-semibold">Live Alerts</h1>
@@ -51,18 +51,10 @@ export default function SafetyAlerts() {
           {alerts.map((alert) => (
             <div
               key={alert.id}
-              className={cn(
-                "flex items-start gap-3 p-4 rounded-lg border-2 animate-in slide-in-from-top-2",
-                alert.type === "critical"
-                  ? "bg-red-50 border-red-200"
-                  : "bg-orange-50 border-orange-200"
-              )}
+              className="flex items-start gap-3 p-4 rounded-lg  bg-white animate-in slide-in-from-top-2"
             >
               <AlertTriangle
-                className={cn(
-                  "w-4 h-4 mt-0.5 shrink-0",
-                  alert.type === "critical" ? "text-red-600" : "text-orange-600"
-                )}
+                className="w-4 h-4 mt-0.5 shrink-0 text-accent"
               />
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-neutral-900">{alert.message}</p>
