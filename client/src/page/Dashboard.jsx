@@ -388,7 +388,10 @@ export default function Dashboard() {
                     </p>
                 </StickyBanner>
             </div>
-            <h1 className="text-2xl font-bold text-black ml-6 mt-3">Welcome, {localStorage.getItem('username')}!</h1>
+            <div className="ml-6 mt-3 mb-4">
+                <h1 className="text-2xl font-bold text-black mb-2">Welcome, {localStorage.getItem('username')}!</h1>
+                <div className="w-30 h-1 bg-[#A100FF] rounded-full"></div>
+            </div>
 
 
             {/* Main Content */}

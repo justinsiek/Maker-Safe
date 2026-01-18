@@ -129,6 +129,15 @@ def create_violation():
         def reset_maker_status():
             try:
                 # Reset maker status back to 'active'
+                # Check if maker is still at the station
+                maker_status_response = supabase.table('maker_status').select('*').eq('maker_id', maker_id).execute()
+                if not maker_status_response.data or len(maker_status_response.data) == 0:
+                    return jsonify({"error": "Maker not found"}), 404
+                
+                maker_status = maker_status_response.data[0]
+                if maker_status.get('station_id') != station_id:
+                    return jsonify({"error": "Maker is not at the station"}), 400
+                
                 supabase.table('maker_status').upsert({
                     'maker_id': maker_id,
                     'status': 'active',

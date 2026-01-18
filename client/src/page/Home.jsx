@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { TextAnimate } from '@/components/ui/text-animate.jsx'
+import { TypingAnimation } from '@/components/ui/typing-animation.jsx'
+import { motion } from 'framer-motion';
 
 import { 
   Sparkles, Bot, Camera, LayoutGrid, ChevronRight, Zap, 
@@ -74,29 +75,40 @@ const handleLogout = async () => {
       </div>
 
       {/* --- Navigation --- */}
-      <nav className="...">
-        {/* Existing Nav Content */}
-      </nav>
-
       <header className="relative z-10 max-w-7xl mx-auto px-4 pt-6 pb-3 grid lg:grid-cols-2 gap-20 items-center"> </header>
 
 
       <header className="relative z-10 max-w-7xl mx-auto px-8 pt-12 pb-24 grid lg:grid-cols-2 gap-20 items-center">
-        <div className="space-y-8">
+        <div className="space-y-8 ">
             {/* <h1 className="text-6xl lg:text-6xl font-[900] leading-[1.05] tracking-tight">Safety for the next generation of <span className="text-[#A100FF]">Makers.</span></h1> */}
-            <TextAnimate animation="fadeIn" as="h1" className="text-6xl font-bold">Safety for the next generation of Makers.</TextAnimate>
-            <p className="text-lg text-[#6F6F6F] max-w-md font-light">Real-time computer vision for school workshops. Monitor PPE compliance and station availability with one simple system.</p>
+            <div className="flex flex-col">
+              <TypingAnimation cursorStyle = "underscore" typeSpeed={50} className="font-bold text-5xl lg:text-6xl leading-[1.05] tracking-tight">For the Makers,</TypingAnimation>
+              <TypingAnimation cursorStyle = "underscore" typeSpeed={50} delay={1000} className="font-bold text-5xl lg:text-6xl leading-[1.05] tracking-tight text-accent">By the Makers.</TypingAnimation>
+            </div>
+
+            <p className="text-lg text-[#6F6F6F] max-w-md mt-10">Real-time computer vision for school workshops. Monitor PPE compliance and station availability with one simple system.</p>
             <button onClick={() => handleNavigateToDashboard()} className="bg-[#A100FF] text-white px-8 py-4 rounded-xl shadow-xl shadow-[#A100FF]/25 hover:scale-105 transition-transform">Launch Dashboard</button>
         </div>
-        <Safari url="https://www.makersafe.io" imageSrc={assets} mode="default" />
+
+        <div className="relative">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
+          >
+            <Safari url="https://www.makersafe.io" imageSrc={assets} mode="default" />
+          </motion.div>
+        
+        </div>
+
       </header>
 
       {/* --- NEW: HOW IT WORKS SECTION --- */}
       <section className="py-24 bg-[#D9DDDC] border-t border-[#E6E6E6] pb-27">
         <div className="max-w-7xl mx-auto px-8">
           <div className="mb-16">
-            <h2 className="text-sm font-black uppercase tracking-[0.3em] text-[#A100FF] mb-4">Workflow</h2>
-            <h3 className="text-4xl font-[800] tracking-tight">The 3-Step Safety Loop</h3>
+            <h2 className="text-sm uppercase tracking-[0.3em] text-[#A100FF] mb-4">Workflow</h2>
+            <h3 className="text-4xl font-bold tracking-tight">The 3-Step Safety Loop</h3>
           </div>
 
           <div className="grid md:grid-cols-3 gap-12 relative">
