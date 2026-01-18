@@ -16,7 +16,7 @@ export default function Violations({ violations = [] }) {
           <h1 className="text-xl font-semibold">Violations</h1>
         </div>
         {/* Accent underline */}
-        <div className="w-16 h-1 bg-[#A100FF] rounded-full"></div>
+        <div className="w-34 h-1 bg-[#A100FF] rounded-full"></div>
       </div>
 
       <div className="flex-1 overflow-y-auto scrollbar-hide px-8 pb-8">
