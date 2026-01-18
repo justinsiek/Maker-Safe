@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { AlertTriangle, X, Volume2, VolumeX } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
+import { Megaphone } from "lucide-react"
 
 export default function SafetyAlerts() {
   const demoAlerts = [
@@ -27,10 +27,13 @@ export default function SafetyAlerts() {
   if (alerts.length === 0) return null
 
   return (
-    <div className="flex flex-col h-1/3  rounded-lg p-4 bg-surface">
+    <div className="flex flex-col h-1/3 rounded-lg px-6 py-4 bg-surface">
       <div className="py-0 shrink-">
         <div className="flex items-center justify-between">
-          <h1 className="text-xl font-semibold">Live Alerts</h1>
+          <div className="flex gap-2">
+            <Megaphone className="w-6 h-6 text-accent" />
+            <h1 className="text-xl font-semibold">Live Announcements</h1>
+          </div>
           <Button
             variant="ghost"
             size="sm"

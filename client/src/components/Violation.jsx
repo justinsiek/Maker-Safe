@@ -1,16 +1,19 @@
-import { useState } from "react"
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import { AlertTriangle } from "lucide-react"
 
 export default function Violations({ violations = [] }) {
 
   return (
-    <div className="flex flex-col h-[45%] rounded-lg overflow-hidden my-4 bg-surface relative">
-        <h1 className="text-xl font-semibold py-3 px-4">Violations</h1>
+    <div className="flex flex-col h-[45%] rounded-lg overflow-hidden my-4 px-6 py-4 bg-surface relative">
+        <div className="flex gap-2">
+            <AlertTriangle className="w-6 h-6 text-accent" />
+            <h1 className="text-xl font-semibold">Violations</h1>
+        </div>
       
       <div className="flex-1 overflow-y-auto scrollbar-hide px-8 pb-8">
         <Accordion type="single" collapsible className="space-y-4">

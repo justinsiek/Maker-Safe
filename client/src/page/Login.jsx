@@ -19,42 +19,93 @@ export default function Login() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <div className="p-8 w-full max-w-sm">
-        <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
-        
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <div>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter username"
-            />
-          </div>
-          
-          <div>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter password"
-            />
-          </div>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-linear-to-br from-[#F5F5F5] to-border">
+      <div className="w-full max-w-md">
+        {/* Logo/Brand Section */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-ink mb-2">
+            Maker<span className="text-[#A100FF]">Safe</span>
+          </h1>
+          <p className="text-sm text-text-muted font-normal">
+            Makerspace Safety Management System
+          </p>
+        </div>
 
-          {error && (
-            <p className="text-red-500 text-sm">{error}</p>
-          )}
+        {/* Login Card */}
+        <div className="bg-white rounded-xl shadow-lg p-8 border border-border">
+          <h2 className="text-2xl font-semibold text-ink mb-6">
+            Sign In
+          </h2>
           
-          <button
-            type="submit"
-            className="w-full bg-black text-white cursor-pointer px-6 py-3 rounded-lg font-medium transition-colors"
-          >
-            Submit
-          </button>
-        </form>
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Username Field */}
+            <div>
+              <label 
+                htmlFor="username" 
+                className="block text-sm font-medium text-ink mb-2"
+              >
+                Username
+              </label>
+              <input
+                id="username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full px-4 py-3 border-2 border-border rounded-lg focus:outline-none focus:border-[#A100FF] transition-colors text-ink placeholder:text-[#9A9A9A]"
+                placeholder="Enter your username"
+                required
+              />
+            </div>
+            
+            {/* Password Field */}
+            <div>
+              <label 
+                htmlFor="password" 
+                className="block text-sm font-medium text-ink mb-2"
+              >
+                Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-3 border-2 border-border rounded-lg focus:outline-none focus:border-[#A100FF] transition-colors text-ink placeholder:text-[#9A9A9A]"
+                placeholder="Enter your password"
+                required
+              />
+            </div>
+
+            {/* Error Message */}
+            {error && (
+              <div className="bg-red-50 border-2 border-red-200 rounded-lg p-3">
+                <p className="text-sm font-medium text-red-600">{error}</p>
+              </div>
+            )}
+            
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="w-full bg-[#A100FF] hover:bg-[#8B00E6] text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg"
+            >
+              Sign In
+            </button>
+          </form>
+
+          {/* Footer */}
+          <div className="mt-6 text-center">
+            <p className="text-xs text-text-muted font-normal">
+              Need access? Contact your makerspace administrator
+            </p>
+          </div>
+        </div>
+
+        {/* Bottom Text */}
+        <div className="text-center mt-6">
+          <p className="text-xs text-text-muted font-normal">
+            © 2026 MakerSafe. All rights reserved.
+          </p>
+        </div>
       </div>
     </div>
   )

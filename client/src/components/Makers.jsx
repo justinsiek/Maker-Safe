@@ -1,3 +1,4 @@
+import { Users } from "lucide-react";
 export default function Makers({ makers = [] }) {
 
   const getStatusColor = (status) => {
@@ -18,7 +19,7 @@ export default function Makers({ makers = [] }) {
     switch(status) {
       case "active":
       case "on duty":
-        return "border-blue-500 bg-blue-50";
+        return "border-accent bg-accent-50";
       case "idle":
         return "border-gray-400 bg-gray-50";
       case "violation":
@@ -30,7 +31,10 @@ export default function Makers({ makers = [] }) {
 
   return (
     <div className="flex flex-col px-6 shrink-0 h-1/4 my-4 rounded-lg py-4 bg-surface">
-        <h1 className="text-xl font-semibold mb-3">Active Makers</h1>
+        <div className="flex gap-2 ">
+          <Users className="w-6 h-6 text-accent" />
+          <h1 className="text-xl font-semibold mb-3">Active Makers</h1>
+        </div>
         <div className="flex w-full gap-4 overflow-x-auto overflow-y-hidden">
           {makers.length === 0 ? (
             <p className="text-neutral-500">No makers checked in</p>

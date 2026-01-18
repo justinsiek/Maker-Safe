@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react"
+import { Map } from "lucide-react";
 
 export default function MapLayout({ className = "", makers = [], stations = [] }) {
   const [hoveredSection, setHoveredSection] = useState(null)
@@ -132,7 +133,7 @@ export default function MapLayout({ className = "", makers = [], stations = [] }
     if (section.status === 'in_use' || section.assignedMaker) {
       return "#A100FF"
     }
-    return "#bbf7d0" // Pastel green
+    return "#F3E8FF" 
   }
 
   const getSectionOpacity = (section) => {
@@ -153,8 +154,11 @@ export default function MapLayout({ className = "", makers = [], stations = [] }
   }
 
   return (
-    <div className="relative w-full h-full flex flex-col px-2 min-h-0">
-      <h1 className="text-xl font-semibold mb-3 px-4">Station Map</h1>
+    <div className="relative w-full h-full flex flex-col px-6 min-h-0">
+      <div className="flex gap-2">
+        <Map className="w-6 h-6 text-accent" />
+        <h1 className="text-xl font-semibold mb-3">Station Map</h1>
+      </div>
       <svg
         viewBox="45 45 660 340"
         preserveAspectRatio="xMidYMin meet"
