@@ -25,7 +25,7 @@ export default function Violations({ violations = [] }) {
             <AccordionItem 
               key={violation.id} 
               value={violation.id}
-              className="border-2 border-neutral-200 rounded-lg overflow-hidden data-[state=open]:border-accent"
+              className="bg-bg border-2 border-neutral-200 rounded-lg overflow-hidden data-[state=open]:border-accent"
             >
               
               <AccordionTrigger className="px-4 py-4 hover:no-underline hover:bg-neutral-50 data-[state=open]:bg-purple-50">
@@ -111,7 +111,7 @@ export default function Violations({ violations = [] }) {
       </div>
       
       {/* Fade overlay at bottom */}
-      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-white/70 to-transparent pointer-events-none"></div>
     </div>
   );
 }

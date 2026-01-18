@@ -1,8 +1,8 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-// import logo from '@/assets/logo.png'
-import logo from '@/assets/logo-inverted.png'
-import makersafe from '@/assets/word-inverted.png'
-// import makersafe from '@/assets/makersafe.png'
+import logo from '@/assets/logo.png'
+// import logo from '@/assets/logo-inverted.png'
+// import makersafe from '@/assets/word-inverted.png'
+import makersafe from '@/assets/makersafe.png'
 
 export default function Nav({ handleLogout = null, handleReset = null }) {
     const navigate = useNavigate();
@@ -57,7 +57,7 @@ export default function Nav({ handleLogout = null, handleReset = null }) {
     };
 
     return (
-        <nav className="flex items-center justify-between px-6 py-3 bg-accent border-b-3 border-accent-hover bg-accent">
+        <nav className="flex items-center justify-between px-6 py-3 bg-accent border-b-3 border-accent-hover bg-bg">
             <div 
                 className="flex cursor-pointer justify-center items-center" 
                 onClick={handleLogoClick}
@@ -70,7 +70,7 @@ export default function Nav({ handleLogout = null, handleReset = null }) {
                 {isLoggedIn && (
                     <button 
                         onClick={onReset}
-                        className="text-accent px-4 py-2 rounded-lg text-sm font-medium cursor-pointer hover:bg-accent-hover transition-colors"
+                        className="text-white px-4 py-2 rounded-lg text-sm font-medium cursor-pointer hover:bg-accent-hover transition-colors"
                     >
                         Reset System
                     </button>
@@ -80,14 +80,14 @@ export default function Nav({ handleLogout = null, handleReset = null }) {
                 {isLoggedIn ? (
                     <button 
                         onClick={onLogout}
-                        className="text-white px-4 py-2 rounded-lg text-sm font-medium cursor-pointer hover:bg-accent-hover transition-colors"
+                        className="text-black px-4 py-2 rounded-lg text-sm font-medium cursor-pointer hover:bg-accent-hover transition-colors"
                     >
                         Log Out
                     </button>
                 ) : (
                     <button 
                         onClick={onLogout}
-                        className="text-white px-4 py-2 rounded-lg text-sm font-medium cursor-pointer hover:bg-gray-100 transition-colors"
+                        className="text-text px-4 py-2 rounded-lg text-sm font-medium cursor-pointer hover:bg-gray-100 transition-colors"
                     >
                         Log Out
                     </button>

@@ -60,7 +60,7 @@ export function Safari({
             height: `${HEIGHT_PCT}%`,
             borderRadius: "0 0 11px 11px",
           }}>
-          <img src={imageSrc} alt="" className="block size-full object-cover object-top" />
+          <img src={imageSrc} alt="" className="block size-full object-contain object-top" />
         </div>
       )}
       <svg

@@ -6,7 +6,7 @@ export default function SafetyAlerts() {
   const demoAlerts = [
     "Equipment maintenance due for Laser Cutter",
     // "Machine temperature warning at 3D Printer station",
-    "Station offline: Soldering Iron equipment not responding",
+    "Bandsaw jammed - please contact maintenance",
   ]
 
   const [alerts, setAlerts] = useState(
@@ -41,7 +41,7 @@ export default function SafetyAlerts() {
           {alerts.map((alert) => (
             <div
               key={alert.id}
-              className="flex items-start gap-3 p-4 rounded-lg bg-white animate-in slide-in-from-top-2"
+              className="border-2 border-neutral-200 flex items-start gap-3 p-4 rounded-lg bg-white animate-in slide-in-from-top-2"
             >
               <AlertTriangle
                 className="w-4 h-4 mt-0.5 shrink-0 text-accent"

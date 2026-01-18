@@ -35,10 +35,7 @@ export default function Home() {
       <div className="bg-accent text-white py-3 px-4 text-center">
         <p className="text-[11px] font-extrabold uppercase tracking-[0.2em] flex items-center justify-center gap-2">
           <span className="opacity-70 font-black">● LIVE:</span>
-          MakerSafe Safety Protocol v1.0 is now active. 
-          <button className="underline underline-offset-4 hover:opacity-80 transition-opacity ml-1">
-            Click to view safety report
-          </button>
+          MakerSafe v1.0 is now active
         </p>
       </div>
 
@@ -98,7 +95,7 @@ export default function Home() {
             <WorkflowStep 
               number="03"
               title="Instant Response"
-              desc="Goggles off? The SenseCAP flashes red, the dashboard logs a snapshot, and you stay safe."
+              desc="Fast and responsive UI updates to the dashboard via WebSocket."
               icon={<Zap className="text-accent" />}
             />
           </div>

@@ -30,18 +30,19 @@ export default function MapLayout({ className = "", makers = [], stations = [] }
 
     return [
       {
-        id: "woodworking",
-        name: "Woodworking",
+        id: "watercutter",
+        name: "Bandsaw",
         path: "M 50 50 L 200 50 L 200 220 L 50 220 Z",
         centerX: 125,
         centerY: 135,
-        assignedMaker: getMakerForStation("Woodworking"),
-        status: getStationStatus("Woodworking"),
+        assignedMaker: null,
+        status: 'idle',
         isStation: true,
+        unavailable: true,
       },
       {
         id: "goon-station",
-        name: "Research Lab",
+        name: "Water Cutter",
         path: "M 200 50 L 420 50 L 420 160 L 200 160 Z",
         centerX: 310,
         centerY: 105,
@@ -50,8 +51,8 @@ export default function MapLayout({ className = "", makers = [], stations = [] }
         isStation: true,
       },
       {
-        id: "electronics",
-        name: "Assembly Lab",
+        id: "woodworking",
+        name: "Woodworking",
         path: "M 420 50 L 580 50 L 580 220 L 470 220 L 420 160 Z",
         centerX: 500,
         centerY: 125,
@@ -76,9 +77,10 @@ export default function MapLayout({ className = "", makers = [], stations = [] }
         path: "M 50 220 L 200 220 L 200 380 L 50 380 Z",
         centerX: 125,
         centerY: 300,
-        assignedMaker: getMakerForStation("Laser Cutter"),
-        status: getStationStatus("Laser Cutter"),
+        assignedMaker: null,
+        status: 'idle',
         isStation: true,
+        unavailable: true,
       },
       {
         id: "community",
@@ -117,6 +119,9 @@ export default function MapLayout({ className = "", makers = [], stations = [] }
   }, [makers, stations])
 
   const getSectionFill = (section) => {
+    // Unavailable stations - grayed out
+    if (section.unavailable) return "#d1d5db"
+    
     // Community room - white
     if (section.isCommunity) return "#ffffff"
     
@@ -137,17 +142,20 @@ export default function MapLayout({ className = "", makers = [], stations = [] }
   }
 
   const getSectionOpacity = (section) => {
+    if (section.unavailable) return 0.6
     if (hoveredSection === section.id || selectedSection === section.id) return 0.9
     return 0.7
   }
 
   const getStatusText = (section) => {
+    if (section.unavailable) return "UNAVAILABLE"
     if (section.status === 'violation') return "VIOLATION"
     if (section.status === 'in_use' || section.assignedMaker) return "IN USE"
     return "AVAILABLE"
   }
 
   const getStatusColor = (section) => {
+    if (section.unavailable) return "#6b7280"
     if (section.status === 'violation') return "#dc2626"
     if (section.status === 'in_use' || section.assignedMaker) return "#ffffff" // White text for occupied
     return "#16a34a"
@@ -197,10 +205,10 @@ export default function MapLayout({ className = "", makers = [], stations = [] }
               fillOpacity={getSectionOpacity(section)}
               stroke="#9ca3af"
               strokeWidth="2.5"
-              className={section.isStation ? "cursor-pointer transition-all duration-200" : ""}
-              onMouseEnter={() => section.isStation && setHoveredSection(section.id)}
+              className={section.isStation && !section.unavailable ? "cursor-pointer transition-all duration-200" : ""}
+              onMouseEnter={() => section.isStation && !section.unavailable && setHoveredSection(section.id)}
               onMouseLeave={() => setHoveredSection(null)}
-              onClick={() => section.isStation && setSelectedSection(section.id === selectedSection ? null : section.id)}
+              onClick={() => section.isStation && !section.unavailable && setSelectedSection(section.id === selectedSection ? null : section.id)}
             />
             
             {/* Section Label */}
@@ -212,11 +220,13 @@ export default function MapLayout({ className = "", makers = [], stations = [] }
                 fontSize={section.isUtility ? "11" : "13"}
                 fontWeight="500"
                 fill={
-                  section.isUtility 
-                    ? "#737373" 
-                    : (section.status === 'in_use' || section.assignedMaker) 
-                      ? "#ffffff" 
-                      : "#1a1a1a"
+                  section.unavailable
+                    ? "#6b7280"
+                    : section.isUtility 
+                      ? "#737373" 
+                      : (section.status === 'in_use' || section.assignedMaker) 
+                        ? "#ffffff" 
+                        : "#1a1a1a"
                 }
                 pointerEvents="none"
               >
@@ -239,8 +249,8 @@ export default function MapLayout({ className = "", makers = [], stations = [] }
               </text>
             )}
             
-            {/* Maker Info */}
-            {section.assignedMaker && (
+            {/* Maker Info - don't show for unavailable */}
+            {section.assignedMaker && !section.unavailable && (
               <text
                 x={section.centerX}
                 y={section.centerY + 22}
