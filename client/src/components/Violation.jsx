@@ -19,7 +19,7 @@ export default function Violations({ violations = [] }) {
         <div className="w-34 h-1 bg-[#A100FF] rounded-full"></div>
       </div>
 
-      <div className="flex-1 overflow-y-auto scrollbar-hide px-8 pb-8">
+      <div className="flex-1 overflow-y-auto scrollbar-hide pb-8">
         <Accordion type="single" collapsible className="space-y-4">
           {violations.map((violation) => (
             <AccordionItem 
@@ -43,7 +43,7 @@ export default function Violations({ violations = [] }) {
                   </div>
                   
                   {/* Time and Date Column */}
-                  <div className="w-full flex flex-col justify-center items-center gap-1">
+                  <div className="w-full flex flex-col justify-center items-end gap-1 mr-2">
                     <span className="text-xs text-neutral-500 font-normal">
                       {violation.time}
                     </span>
