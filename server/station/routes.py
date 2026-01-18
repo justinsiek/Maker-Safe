@@ -64,8 +64,9 @@ def station_enter():
             return jsonify({"error": f"Maker with label '{external_label}' is not checked in"}), 404
         
         maker_status = maker_status_response.data[0]
-        if maker_status.get('status') != 'active':
-            return jsonify({"error": f"Maker with label '{external_label}' is not checked in"}), 404
+        # Allow entry if maker is 'idle' (just checked in) or 'active' (already at another station - optional)
+        if maker_status.get('status') not in ['idle', 'active']:
+            return jsonify({"error": f"Maker with label '{external_label}' cannot enter station (status: {maker_status.get('status')})"}), 400
         
         # Look up the station
         station_response = supabase.table('stations').select('*').eq('id', station_id).execute()
