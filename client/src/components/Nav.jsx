@@ -1,5 +1,6 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import React from 'react';
+import logo from '@/assets/logo.png'
 
 export default function Nav({ handleLogout = null, handleReset = null }) {
     const navigate = useNavigate();
@@ -54,18 +55,19 @@ export default function Nav({ handleLogout = null, handleReset = null }) {
 
     return (
         <nav className="flex items-center justify-between px-6 py-2 bg-white border-b border-gray-200">
-            <span 
-                className="text-2xl font-bold cursor-pointer" 
+            <div 
+                className="flex cursor-pointer justify-center items-center" 
                 onClick={handleLogoClick}
             >
-                Maker<span className="text-[#A100FF]">Safe</span>
-            </span>
+                <img src={logo} alt="MakerSafe Logo" className="w-18" />
+                <p className="text-2xl font-bold">Maker<span className="text-[#A100FF]">Safe</span></p>
+            </div>
             <div className="flex gap-2">
                 {/* Show Reset button when logged in */}
                 {isLoggedIn && (
                     <button 
                         onClick={onReset}
-                        className="text-black px-4 py-2 rounded-lg text-sm font-medium cursor-pointer hover:bg-gray-100 transition-colors"
+                        className="text-white px-4 py-2 rounded-lg text-sm font-medium cursor-pointer hover:bg-gray-100 transition-colors"
                     >
                         Reset
                     </button>

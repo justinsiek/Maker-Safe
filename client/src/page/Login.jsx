@@ -37,7 +37,7 @@ export default function Login() {
     e.preventDefault()
     setError('')
 
-    if (username.trim() !== 'SlugSpace' && username === password) {
+    if (username == 'SlugSpace' && password == 'password') {
       localStorage.setItem('isLoggedIn', 'true')
       navigate('/dashboard')
     } else {
