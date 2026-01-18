@@ -19,7 +19,7 @@ export default function Makers({ makers = [] }) {
     switch(status) {
       case "active":
       case "on duty":
-        return "border-accent bg-accent-50";
+        return "border-purple-500 bg-purple-100";
       case "idle":
         return "border-gray-400 bg-gray-50";
       case "violation":
@@ -30,7 +30,7 @@ export default function Makers({ makers = [] }) {
   };
 
   return (
-    <div className="flex flex-col px-6 shrink-0 h-1/4 my-4 rounded-lg py-4 bg-surface">
+    <div className="flex flex-col px-6 shrink-0 h-1/4 my-4 rounded-lg py-4 bg-gray-100">
         <div className="flex flex-col">
           <div className="flex gap-2 mb-2">
             <Users className="w-6 h-6 text-[#A100FF]" />
@@ -39,14 +39,14 @@ export default function Makers({ makers = [] }) {
           {/* Accent underline */}
           <div className="w-44 h-1 bg-[#A100FF] rounded-full mb-3"></div>
         </div>
-        <div className="flex w-full gap-3 overflow-x-auto overflow-y-hidden">
+        <div className="flex justify-start w-full gap-3 overflow-x-auto overflow-y-hidden">
           {makers.length === 0 ? (
             <p className="text-neutral-500">No makers checked in</p>
           ) : (
             makers.map((maker) => (
               <div 
                 key={maker.id}
-                className={`h-full py-3 px-10 flex flex-row items-center gap-4 rounded-xl border-2 shrink-0 ${getCardStyles(maker.status)}`}
+                className={`h-full py-3 px-4 flex flex-row items-center gap-4 rounded-xl border-2 shrink-0 ${getCardStyles(maker.status)}`}
               >
                 {/* Avatar */}
                 <div className={`${getStatusColor(maker.status)} w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold text-base shrink-0`}>
@@ -61,17 +61,11 @@ export default function Makers({ makers = [] }) {
                   <span className={`mt-1 px-2 py-0.5 rounded text-white text-xs font-medium w-fit ${getStatusColor(maker.status)}`}>
                     {maker.status}
                   </span>
-                  {maker.stationName && (
-                    <span className="text-xs text-neutral-500 font-normal mt-1">
-                      @ {maker.stationName}
-                    </span>
-                  )}
                 </div>
               </div>
             ))
           )}
       </div>
-
     </div>
   );
 }

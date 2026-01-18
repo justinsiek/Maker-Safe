@@ -108,8 +108,8 @@ def handle_connect():
 @socketio.on('disconnect')
 def handle_disconnect():
     print('Client disconnected')
-
+ 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8080))
     print(f"Starting Flask server with WebSocket on port {port}...")
-    socketio.run(app, debug=os.getenv('FLASK_DEBUG', 'True').lower() == 'true', host='localhost', port=port)
+    socketio.run(app, debug=os.getenv('FLASK_DEBUG', 'True').lower() == 'true', host='0.0.0.0', port=port)
